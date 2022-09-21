@@ -1,0 +1,29 @@
+{
+  "configuration": {
+    "name": "post-leads-finder-test",
+    "status": "ERROR",
+    "appenders": {
+      "Console": {
+        "name": "STDOUT",
+        "PatternLayout": {
+          "pattern": "%d [%t] %-5p %c - %m%n"
+        }
+      }
+    },
+    "loggers": {
+      "logger" : {
+        "name" : "edu.postleadsfinder",
+        "level" : "debug",
+        "AppenderRef": {
+          "ref": "STDOUT"
+        }
+      },
+      "root": {
+        "level": "INFO",
+        "AppenderRef": {
+          "ref": "STDOUT"
+        }
+      }
+    }
+  }
+}
