@@ -46,10 +46,12 @@ Based on DFS (Depth First Search) algorithm, as per book
 4) Remove all "dead ends" (vertices with zero out-degree), taking into account that removal 
  of some vertices may cause other "dead ends" to appear. The only "dead end" vertex
  is the Finish vertex. 
-5) Take the remaining graph vertices in __topological sort order__. (This is the order opposite to "end processing time".)
+5) Take the remaining graph vertices in __topological sort order__. 
+ (This is the order opposite to "end processing time" in DFS algorithm.)
 6) Calculate in-degree and out-degree for each vertex.  
-7) Traverse the vertices in "topological sorting order" maintaining "parallel edge count" integer metric:  
- for each node subtract the in-degree, then adding out-degree. Basing on this metric we detect all the post-leads.   
+7) Traverse the vertices in "topological sorting order" maintaining "parallel edge count" integer metric: 
+ for each node reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
+ Basing on this metric value detect all the post-lead vertices.   
 
 The complexity of this solution is the time of DFS traversal, which is `O(V + E)`,  
 and `O(V + E)` memory, as we store some temporary data for each vertex and edge.      
