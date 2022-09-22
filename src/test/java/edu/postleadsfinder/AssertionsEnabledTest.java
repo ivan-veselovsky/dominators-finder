@@ -2,16 +2,11 @@ package edu.postleadsfinder;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.assertj.core.api.BDDAssertions.then;
 
 class AssertionsEnabledTest {
     @Test
     void ensure_assertions_enabled() {
-        try {
-            assert false;
-        } catch (AssertionError ae) {
-            return;
-        }
-        fail("Assertions seems to be off. ");
+        then(Util.areAssertionsEnabled()).describedAs("Assertions must be enabled in tests.").isTrue();
     }
 }

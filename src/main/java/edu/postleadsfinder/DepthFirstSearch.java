@@ -7,9 +7,21 @@ import javax.annotation.Nullable;
 @RequiredArgsConstructor
 public class DepthFirstSearch {
 
+    /**
+     * Custom function to be supplied to DFS traverse algorithm.
+     */
     @FunctionalInterface
     public interface EdgeFunction {
-        boolean apply(int time, Vertex fromVertex, Vertex toVertex);
+        /**
+         * Generic visit function. Same interface is used for "forward" (down the stack) and "backward" (up the stack) functions.
+         * For forward function it is absolutely critical to return correct result, as otherwise same vertices may be visited twice.
+         * @param time The time when {@code toVertex} is visited.
+         * @param fromVertex The vertex next up to the stack at the moment of {@code toVertex} visit.
+         * @param toVertex The vertex we're visiting ().
+         * @return for forward direction (down the stack): {@code true} if we should traverse further, of {@code false} otherwise.
+         * for backward direction (up the stack) the return value is ignored.
+         */
+        boolean apply(int time, @Nullable Vertex fromVertex, Vertex toVertex);
     }
 
     private final Graph graph;

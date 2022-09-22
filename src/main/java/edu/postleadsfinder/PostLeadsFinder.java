@@ -16,7 +16,7 @@ import static com.google.common.base.Verify.verify;
 @Log4j2
 public class PostLeadsFinder {
     /** When true, implementation makes mode diagnostic checks. */
-    private static final boolean DEBUG_MODE = false;
+    private static final boolean DEBUG_MODE = Util.areAssertionsEnabled();
 
     @Getter
     private final LinkedList<Vertex> topologicalSortList = new LinkedList<>();

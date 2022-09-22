@@ -1,6 +1,8 @@
 package edu.postleadsfinder;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import java.util.List;
 
@@ -399,6 +401,46 @@ n -> a
         List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("D", "X", "Z", "E", "H");
+    }
+
+    @ParameterizedTest
+    @CsvSource({"B, F_G",
+            "C, F_G",
+            "D, E_B_F_G",
+            "E, B_F_G",
+            "F, G",
+            "G, _"
+    })
+    void all_possible_start_vertices(String start, String expectedPostLeads) {
+        String[] expectedKeys = expectedPostLeads.split("_");
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"" + start + "\"," +
+                "\"e2\": \"G\"," +
+                """ 
+                        "graph": "digraph graphname{
+                        A -> B
+                        B -> C
+                        B -> D
+                        D -> E
+                        C -> F
+                        C -> E
+                        F -> G
+                        E -> B
+                        B -> F
+                        G -> B
+                        }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).containsExactly(expectedKeys);
     }
 
 }

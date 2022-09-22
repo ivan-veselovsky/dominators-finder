@@ -16,9 +16,9 @@ class InputDataTest {
                 "\"graph\": \" digraph graphname{\n1->2\n2->3\n2->5\n5->2\n3->5\n5->7}\"" +
                 "}",
                 InputData.class);
-        then(inputData.getEntryNodeId()).isEqualTo("1");
-        then(inputData.getExitNodeId()).isEqualTo("7");
-        then(inputData.getStartNodeId()).isEqualTo("2");
+        then(inputData.getEntryNodeKey()).isEqualTo("1");
+        then(inputData.getExitNodeKey()).isEqualTo("7");
+        then(inputData.getStartNodeKey()).isEqualTo("2");
         then(inputData.getDotFormatGraph()).isEqualTo(" digraph graphname{\n1->2\n2->3\n2->5\n5->2\n3->5\n5->7}");
     }
 }

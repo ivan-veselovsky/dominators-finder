@@ -32,12 +32,12 @@ public class VertexPayload {
     private Map<Integer, EdgeKind> edgeKinds;
 
     /**
-     * Edges that go to "dead end" Vertices.
+     * Edges that go to "dead end" branches.
      */
     private Set<Integer> deadEdges;
 
     @Getter
-    private int inDegreeWithoutDeadEdges = 0;
+    private int inDegreeWithoutDeadEdges;
     @Getter
     private int outDegreeWithoutDeadEdges;
 
