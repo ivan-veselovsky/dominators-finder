@@ -36,29 +36,30 @@ of your solution.
 
 #### Solution Description
 
-Based on DFS (Depth First Search) algorithm, as per book 
-"Introduction to Algorithms" by T.H. Cormen, Ch.E. Leiserson, R.L. Rivest.    
+Solution is based on Depth First Search (DFS) algorithm, as per book 
+"Introduction to Algorithms" by T.H. Cormen, Ch.E. Leiserson, R.L. Rivest:    
 1) Build the DFS tree starting from the given Start vertex (_h_). (Finish vertex (_e2_) must 
  be reachable from the Start vertex (_h_), so it appears on the tree. Otherwise we throw an error.)
 2) Classify all the DFS edges as being of _TREE_, _FORWARD_, _BACKWARD_, or _CROSS_ kind.
 3) Remove loops by removing all _BACKWARD_ edges.
 4) Remove all "dead ends" (vertices with zero out-degree), taking into account that removal 
- of some vertices may cause other "dead ends" to appear. The only "dead end" vertex
+ of some vertices may cause other "dead ends" to appear. When this step is finished, the only "dead end" vertex
  is the Finish vertex. 
-5) Take the remaining graph vertices in __topological sort order__. 
- (This is the order opposite to "end processing time" in DFS algorithm.)
+5) Take the remaining graph vertices in _topological sort order_. 
+ (This is the descending order of "end processing time" in DFS algorithm).
 6) Calculate in-degree and out-degree for each vertex.  
-7) Traverse the vertices in "topological sorting order" maintaining "parallel edge count" integer metric: 
+7) Traverse the vertices in _topological sorting order_ maintaining _parallel edge count_ integer metric: 
  for each node reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
- Basing on this metric value detect all the post-lead vertices.   
+ Basing on this metric detect all the post-lead vertices: the post-lead is a node where this metric drops to zero.   
 
 ##### Complexity
 
 The complexity of this solution is the time of DFS traversal, which is `O(V + E)`,  
 and `O(V + E)` memory, as we store some temporary data for each vertex and edge.      
 
-##### Build and test:
-(Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`)  
+##### Build and Test
+
+Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`  
 
     mvn clean install
     java -jar ./target/post-leads-finder-1.0-SNAPSHOT-exec.jar
@@ -66,13 +67,13 @@ and `O(V + E)` memory, as we store some temporary data for each vertex and edge.
 
 ##### Notes
 
-- Known notion of graph _articulation points_ unfortunately cannot be directly applied here, 
+- Known notion of graph _articulation points_ cannot be directly applied here, 
  because the _post-leads_ become articulation points only after loops removal.
 - The algorithm described above can naturally be implemented in several graph traversals, but
- in fact it can be implemented in just one DFS traversal, as implemented here.
-- Start vertex is always a _post-lead_ of itself, but the above example shows that it shall not be
- present in the return value, so we explicitly exclude the Start vertex.
+ in fact it can be implemented in just one DFS traversal, as done here.
+- Start vertex is always a _post-lead_ of itself, but the solution description shows that it shall not be
+ present in the returned result, so we explicitly exclude the Start vertex.
 - Output is *not* a JSON, its just `{A, B, C}` string of type `text/plain`, as task description suggests.
 - By default server starts on non-standard port `10000`, as task description suggests.
-- When testing with `curl` please use `-H "Content-Type: application/json"` parameter, otherwise JSON gets encoded,
+- When testing with `curl` please make sure to use `-H "Content-Type: application/json"` parameter, otherwise JSON gets encoded,
  and the service fails to parse it.

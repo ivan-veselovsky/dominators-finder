@@ -137,7 +137,7 @@ public class PostLeadsFinder {
     }
 
     private List<Vertex> findPostLeads() {
-        final List<Vertex> result = new LinkedList<>();
+        final List<Vertex> postLeadVertices = new LinkedList<>();
         int parallelEdgeCount = 0;
         for (Vertex vertex: topologicalSortList) {
             int inDegree = vertex.getNodePayload().getInDegree();
@@ -148,19 +148,17 @@ public class PostLeadsFinder {
 
             parallelEdgeCount -= inDegree;
             boolean isPostLeadVertex = (parallelEdgeCount == 0);
-
             parallelEdgeCount += outDegree;
-            isPostLeadVertex |= (parallelEdgeCount == 1);
 
             assert (isExitVertex(vertex) && parallelEdgeCount == 0)
                     || (!isExitVertex(vertex) && parallelEdgeCount > 0);
-            // NB: according to task description the start vertex should *not* be present in the answer,
-            // so we explicitly omit it:
+            // NB: according to task description the start vertex should *not* be present in the result,
+            // so we explicitly skip it:
             if (isPostLeadVertex && !isStartVertex(vertex)) {
-                result.add(vertex);
+                postLeadVertices.add(vertex);
             }
         }
-        return result;
+        return postLeadVertices;
     }
 
     public static List<String> asKeys(Collection<Vertex> vertices) {
