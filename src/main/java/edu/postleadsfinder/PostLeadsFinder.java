@@ -163,7 +163,7 @@ public class PostLeadsFinder {
         return result;
     }
 
-    static List<String> asKeys(Collection<Vertex> vertices) {
+    public static List<String> asKeys(Collection<Vertex> vertices) {
         return vertices.stream().map(Vertex::getKey).toList();
     }
 }

@@ -15,11 +15,10 @@ The server outputs all the nodes that post-lead ℎ in the
 graph.
 
 #### For example:
-    $ curl -X POST http://localhost:10000/server -H "contenttype:application/json" -d '{"e1": "1","e2": "7","h": "2","graph": " digraph graphname{\n1->2\n2->3\n2->5\n5->2\n3->5\n5->7}"}'
 
-The server should return
+    $ curl -X POST http://localhost:10000/server -H "Content-Type: application/json" -d '{"e1": "1","e2": "7","h": "2","graph": " digraph graphname{\n1->2\n2->3\n2->5\n5->2\n3->5\n5->7}"}'
 
-    {5,7}
+The server should return `{5,7}`
 
 #### Guidelines
 - The code should be readable, maintainable, and clear.
@@ -53,12 +52,27 @@ Based on DFS (Depth First Search) algorithm, as per book
  for each node reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
  Basing on this metric value detect all the post-lead vertices.   
 
+##### Complexity
+
 The complexity of this solution is the time of DFS traversal, which is `O(V + E)`,  
 and `O(V + E)` memory, as we store some temporary data for each vertex and edge.      
 
+##### Build and test:
+(Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`)  
+
+    mvn clean install
+    java -jar ./target/post-leads-finder-1.0-SNAPSHOT-exec.jar
+    curl http://localhost:10000/
+
 ##### Notes
 
-- Known notion of graph _articulation points_ unfortunately cannot be directly applicable here, 
- because the post-leads become articulation points only after loops removal.
-- The algorithm described above can easily be implemented in several graph traversals, but
- in fact it can be implemented in just one DFS traversal, as implemented here.  
+- Known notion of graph _articulation points_ unfortunately cannot be directly applied here, 
+ because the _post-leads_ become articulation points only after loops removal.
+- The algorithm described above can naturally be implemented in several graph traversals, but
+ in fact it can be implemented in just one DFS traversal, as implemented here.
+- Start vertex is always a _post-lead_ of itself, but the above example shows that it shall not be
+ present in the return value, so we explicitly exclude the Start vertex.
+- Output is *not* a JSON, its just `{A, B, C}` string of type `text/plain`, as task description suggests.
+- By default server starts on non-standard port `10000`, as task description suggests.
+- When testing with `curl` please use `-H "Content-Type: application/json"` parameter, otherwise JSON gets encoded,
+ and the service fails to parse it.

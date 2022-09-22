@@ -11,15 +11,8 @@
       }
     },
     "loggers": {
-      "logger" : {
-        "name" : "edu.postleadsfinder",
-        "level" : "debug",
-        "AppenderRef": {
-          "ref": "STDOUT"
-        }
-      },
       "root": {
-        "level": "INFO",
+        "level": "DEBUG",
         "AppenderRef": {
           "ref": "STDOUT"
         }

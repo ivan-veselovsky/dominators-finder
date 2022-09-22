@@ -58,8 +58,8 @@ public class GraphBuilder {
     }
 
     void preCheckInputData() {
-        Preconditions.checkArgument(!isNullOrEmpty(inputData.getStartNodeId()), "Start node (\"h\") must be given.");
-        Preconditions.checkArgument(!isNullOrEmpty(inputData.getExitNodeId()), "Exit node (\"e2\") must be given.");
+        Preconditions.checkArgument(!isNullOrEmpty(inputData.getStartNodeId()), "Start vertex (\"h\") must be given.");
+        Preconditions.checkArgument(!isNullOrEmpty(inputData.getExitNodeId()), "Exit vertex (\"e2\") must be given.");
         Preconditions.checkArgument(!isNullOrEmpty(inputData.getDotFormatGraph()), "Graph (\"graph\") must be given.");
     }
 
@@ -102,19 +102,19 @@ public class GraphBuilder {
         final String entryNodeId = inputData.getEntryNodeId();
         if (!isNullOrEmpty(entryNodeId)) {
             JGraphtVertex entryVertex =  vertexMap.get(entryNodeId);
-            Preconditions.checkArgument(entryVertex != null, "Entry node %s must be present in the Graph.", entryNodeId);
-            Preconditions.checkArgument(jgraphtGraph.outDegreeOf(entryVertex) > 0, "Entry node %s must have outgoing edges.", entryNodeId);
+            Preconditions.checkArgument(entryVertex != null, "Entry vertex [%s] must be present in the Graph.", entryNodeId);
+            Preconditions.checkArgument(jgraphtGraph.outDegreeOf(entryVertex) > 0, "Entry vertex [%s] must have outgoing edges.", entryNodeId);
         }
 
         final String startNodeId = inputData.getStartNodeId();
         startVertex =  vertexMap.get(startNodeId);
-        Preconditions.checkArgument(startVertex != null, "Entry node %s must be present in the Graph.", startNodeId);
-        Preconditions.checkArgument(jgraphtGraph.outDegreeOf(startVertex) > 0, "Entry node %s must have outgoing edges.", startNodeId);
+        Preconditions.checkArgument(startVertex != null, "Start vertex [%s] must be present in the Graph.", startNodeId);
+        Preconditions.checkArgument(jgraphtGraph.outDegreeOf(startVertex) > 0, "Start vertex [%s] must have outgoing edges.", startNodeId);
 
         final String exitNodeId = inputData.getExitNodeId();
         exitVertex =  vertexMap.get(exitNodeId);
-        Preconditions.checkArgument(exitVertex != null, "Exit node %s must be present in the Graph.", exitNodeId);
-        Preconditions.checkArgument(jgraphtGraph.inDegreeOf(exitVertex) > 0, "Exit node %s must have incoming edges.", exitNodeId);
+        Preconditions.checkArgument(exitVertex != null, "Exit vertex [%s] must be present in the Graph.", exitNodeId);
+        Preconditions.checkArgument(jgraphtGraph.inDegreeOf(exitVertex) > 0, "Exit vertex [%s] must have incoming edges.", exitNodeId);
     }
 
     void buildGraph() {

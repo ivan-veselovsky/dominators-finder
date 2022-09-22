@@ -1,6 +1,6 @@
 {
   "configuration": {
-    "name": "post-leads-finder-test",
+    "name": "post-leads-finder-application",
     "status": "ERROR",
     "appenders": {
       "Console": {
@@ -11,13 +11,6 @@
       }
     },
     "loggers": {
-      "logger" : {
-        "name" : "edu.postleadsfinder",
-        "level" : "debug",
-        "AppenderRef": {
-          "ref": "STDOUT"
-        }
-      },
       "root": {
         "level": "INFO",
         "AppenderRef": {
