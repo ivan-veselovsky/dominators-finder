@@ -86,11 +86,9 @@ public class NodePayload {
 
         targetVertex.getNodePayload().decrementInDegree();
 
-        log.info(() -> { if (isDead()) {
-            return "Node " + vertex.getKey() + " became DEAD.";
-        } else {
-            return null;
-        }});
+        if (isDead()) {
+            log.debug(() -> "Node " + vertex.getKey() + " became DEAD.");
+        }
     }
 
     boolean isDead() {

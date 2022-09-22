@@ -79,21 +79,6 @@ public class GraphBuilder {
         try (Reader reader = new StringReader(digraphDSLString)) {
             importer.importGraph(jgraphtGraph, reader);
         }
-
-        debugPrint();
-    }
-
-    private void debugPrint() {
-        Set<JGraphtVertex> vertexSet = jgraphtGraph.vertexSet();
-        for (JGraphtVertex vertex: vertexSet) {
-            System.out.print(vertex + " -> [");
-            Set<JGraphtEdge> edges = jgraphtGraph.outgoingEdgesOf(vertex);
-            for (JGraphtEdge edge: edges) {
-                JGraphtVertex targetVertex = jgraphtGraph.getEdgeTarget(edge);
-                System.out.print(" " +  targetVertex.getKey());
-            }
-            System.out.println("]");
-        }
     }
 
     void checkInvariants() {

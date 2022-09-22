@@ -100,37 +100,6 @@ n -> a
         List<String> keyList = asKeys(finder.doJob());
 
         then(keyList).containsExactly("n", "o");
-
-//        graph.nodeStream().forEachOrdered(System.out::println);
-//
-//        finder.getTopologicalSortList().forEach(v -> System.out.print(v.getKey() + " -> "));
-//        System.out.println();
-
-//        // Edges:
-//        then(graph.node(0).getOutgoingEdges()).containsExactly(1);
-//        then(graph.node(1).getOutgoingEdges()).containsExactly(2, 3);
-//        then(graph.node(2).getOutgoingEdges()).containsExactly(3);
-//        then(graph.node(3).getOutgoingEdges()).containsExactly(1, 4);
-//        then(graph.node(4).getOutgoingEdges()).containsExactly();
-//
-//        // Start/End times:
-//        then(graph.node(0).getNodePayload().getStartTime()).isEqualTo(-1);
-//        then(graph.node(0).getNodePayload().getFinishTime()).isEqualTo(-1);
-//        then(graph.node(1).getNodePayload().getStartTime()).isEqualTo(1);
-//        then(graph.node(1).getNodePayload().getFinishTime()).isEqualTo(10);
-//        then(graph.node(2).getNodePayload().getStartTime()).isEqualTo(2);
-//        then(graph.node(2).getNodePayload().getFinishTime()).isEqualTo(8);
-//        then(graph.node(3).getNodePayload().getStartTime()).isEqualTo(3);
-//        then(graph.node(3).getNodePayload().getFinishTime()).isEqualTo(7);
-//        then(graph.node(4).getNodePayload().getStartTime()).isEqualTo(5);
-//        then(graph.node(4).getNodePayload().getFinishTime()).isEqualTo(6);
-//
-//        // Edges color:
-//        then(graph.node(1).getNodePayload().edgeKind(2)).isEqualTo(EdgeKind.TREE);
-//        then(graph.node(1).getNodePayload().edgeKind(3)).isEqualTo(EdgeKind.FORWARD);
-//        then(graph.node(2).getNodePayload().edgeKind(3)).isEqualTo(EdgeKind.TREE);
-//        then(graph.node(3).getNodePayload().edgeKind(4)).isEqualTo(EdgeKind.TREE);
-//        then(graph.node(3).getNodePayload().edgeKind(1)).isEqualTo(EdgeKind.BACKWARD);
     }
 
     @Test

@@ -46,7 +46,6 @@ public class PostLeadsFinder {
             verify(u == null || isExitVertex(u) || !u.getNodePayload().isDead(), "Expected to be live: " + u);
             if (u != null && !u.getNodePayload().isLiveEdge(v.getId())) {
                 // do not visit edges that are detected to be dead:
-                //System.out.println("edge " + u + " -> " + v + " is dead, so not traversed.");
                 return false;
             }
             verify(isExitVertex(v) || !v.getNodePayload().isDead());
@@ -65,7 +64,7 @@ public class PostLeadsFinder {
             verify(isExitVertex(v) || v.getNodePayload().getOutDegreeWithoutDeadEdges() > 0);
             verify(u == null || u.getNodePayload().getOutDegreeWithoutDeadEdges() > 0);
 
-            System.out.println("degrees [" + v +"]: " + v.getNodePayload().getInDegree() + ":" +v.getNodePayload().getOutDegreeWithoutDeadEdges());
+            log.debug(() -> "degrees of vertex [" + v +"]: " + v.getNodePayload().getInDegree() + ":" +v.getNodePayload().getOutDegreeWithoutDeadEdges());
             return true;
         }).dfs(startVertex);
 
@@ -83,7 +82,7 @@ public class PostLeadsFinder {
 
             if (edgeKind == EdgeKind.BACKWARD
                     || (discoveredVertex.getNodePayload().isDead() && !isExitVertex(discoveredVertex))) {
-                System.out.println("Discovered dead edge: " + edgeKind
+                log.debug(() -> "Discovered dead edge: " + edgeKind
                         + " from " + currentVertex + " --> " + discoveredVertex);
                 currentVertex.getNodePayload().markEdgeDead(discoveredVertex);
             }
