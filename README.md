@@ -59,7 +59,7 @@ and `O(V + E)` memory, as we store some temporary data for each vertex and edge.
 
 ##### Build and Test
 
-Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`  
+Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`.   
 
     mvn clean install
     java -jar ./target/post-leads-finder-1.0-SNAPSHOT-exec.jar
@@ -71,9 +71,9 @@ Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`
  because the _post-leads_ become articulation points only after loops removal.
 - The algorithm described above can naturally be implemented in several graph traversals, but
  in fact it can be implemented in just one DFS traversal, as done here.
-- Start vertex is always a _post-lead_ of itself, but the solution description shows that it shall not be
- present in the returned result, so we explicitly exclude the Start vertex.
-- Output is *not* a JSON, its just `{A, B, C}` string of type `text/plain`, as task description suggests.
+- Start vertex is always a _post-lead_ of itself, but the task description suggests that it shall not be
+ present in the returned result, so we explicitly skip the Start vertex in the output.
+- Output is *not* a valid JSON, its just `{A, B, C}` string of type `text/plain`, as task description suggests.
 - By default server starts on non-standard port `10000`, as task description suggests.
 - When testing with `curl` please make sure to use `-H "Content-Type: application/json"` parameter, otherwise JSON gets encoded,
  and the service fails to parse it.
