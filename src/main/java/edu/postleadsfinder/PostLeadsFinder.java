@@ -148,20 +148,21 @@ public class PostLeadsFinder {
             int inDegree = vertex.getVertexPayload().getInDegreeWithoutDeadEdges();
             int outDegree = vertex.getVertexPayload().getOutDegreeWithoutDeadEdges();
 
-            assert isStartVertex(vertex) || inDegree > 0;
-            assert isExitVertex(vertex) || outDegree > 0;
+            assert (isStartVertex(vertex) && inDegree == 0) || (!isStartVertex(vertex) && inDegree > 0);
+            assert (isExitVertex(vertex) && outDegree == 0) || (!isExitVertex(vertex) && outDegree > 0);
 
             parallelEdgeCount -= inDegree;
-            boolean isPostLeadVertex = (parallelEdgeCount == 0);
+
+            // NB: according to task description the start vertex should *not* be present in the result,
+            // so we explicitly skip it:
+            if ((parallelEdgeCount == 0) && !isStartVertex(vertex)) {
+                postLeadVertices.add(vertex);
+            }
+
             parallelEdgeCount += outDegree;
 
             assert (isExitVertex(vertex) && parallelEdgeCount == 0)
                     || (!isExitVertex(vertex) && parallelEdgeCount > 0);
-            // NB: according to task description the start vertex should *not* be present in the result,
-            // so we explicitly skip it:
-            if (isPostLeadVertex && !isStartVertex(vertex)) {
-                postLeadVertices.add(vertex);
-            }
         }
         return postLeadVertices;
     }
