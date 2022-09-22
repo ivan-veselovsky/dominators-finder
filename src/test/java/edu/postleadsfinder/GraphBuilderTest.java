@@ -21,7 +21,7 @@ class GraphBuilderTest {
 
         graph.vertexStream().forEachOrdered(System.out::println);
 
-        then(graph.size()).isEqualTo(5);
+        then(graph.numberOfVertices()).isEqualTo(5);
         then(graph.numberOfEdges()).isEqualTo(6);
 
         then(graph.vertex(0).getOutgoingEdges()).containsExactly(1);

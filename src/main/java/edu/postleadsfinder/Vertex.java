@@ -3,6 +3,8 @@ package edu.postleadsfinder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.function.Function;
 
 /**
@@ -21,14 +23,14 @@ public class Vertex {
     @Getter
     private final String key;
     @Getter
-    private final int[] outgoingEdges; // todo: make it an immutable list
+    private final List<Integer> outgoingEdges;
     @Getter
     private final NodePayload nodePayload;
 
     Vertex(int id, String key, int[] outgoingEdges, Function<Vertex, NodePayload> payloadFunction) {
         this.id = id;
         this.key = key;
-        this.outgoingEdges = outgoingEdges;
+        this.outgoingEdges = Arrays.stream(outgoingEdges).boxed().toList();
         this.nodePayload = payloadFunction.apply(this);
     }
 

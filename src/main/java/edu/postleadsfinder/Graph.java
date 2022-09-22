@@ -6,6 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+/**
+ * Represents a generic Directed Graph.
+ */
 public class Graph {
 
     private final Vertex[] vertices;
@@ -22,17 +25,16 @@ public class Graph {
         }
     }
 
-    int size() {
+    int numberOfVertices() {
         return vertices.length;
     }
 
     int numberOfEdges() {
-        return (int)Arrays.stream(vertices).map(Vertex::getOutgoingEdges).flatMapToInt(Arrays::stream).count();
+        return Arrays.stream(vertices).mapToInt(v -> v.getOutgoingEdges().size()).sum();
     }
 
-    List<Vertex> outgoingNodes(Vertex vertex) {
-        int[] childrenIndices = vertex.getOutgoingEdges();
-        return Arrays.stream(childrenIndices).mapToObj(i -> vertices[i]).toList();
+    List<Vertex> outgoingVertices(Vertex vertex) {
+        return vertex.getOutgoingEdges().stream().map(i -> vertices[i]).toList();
     }
 
     Stream<Vertex> vertexStream() {
@@ -44,7 +46,7 @@ public class Graph {
     }
 
     /**
-     * Can be used before next traversal to clear the "color" of Vertices.
+     * Utility method. Can be used before next traversal to clear the "color" of Vertices.
      */
     void clearTime() {
         vertexStream().forEach(v -> v.getNodePayload().clearTime());

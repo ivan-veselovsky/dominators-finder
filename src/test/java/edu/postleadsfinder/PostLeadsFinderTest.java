@@ -32,7 +32,7 @@ class PostLeadsFinderTest {
         then(graph.vertex(4).getOutgoingEdges()).containsExactly();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> postLeadKeys = asKeys(finder.doJob());
+        List<String> postLeadKeys = asKeys(finder.computePostLeads());
         then(postLeadKeys).containsExactly("5", "7");
 
         // Start/End times:
@@ -97,7 +97,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("n", "o");
     }
@@ -129,7 +129,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("B", "F", "G");
     }
@@ -168,7 +168,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("B", "F", "G");
     }
@@ -215,7 +215,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("B", "F", "G");
     }
@@ -245,7 +245,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("D", "H");
     }
@@ -278,7 +278,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("D", "E", "H");
     }
@@ -311,7 +311,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("D", "X", "Y", "Z", "E", "H");
     }
@@ -350,7 +350,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("D", "X", "Z", "E", "H");
     }
@@ -396,7 +396,7 @@ n -> a
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.doJob());
+        List<String> keyList = asKeys(finder.computePostLeads());
 
         then(keyList).containsExactly("D", "X", "Z", "E", "H");
     }

@@ -15,13 +15,16 @@ import static com.google.common.base.Verify.verify;
 @RequiredArgsConstructor
 @Log4j2
 public class PostLeadsFinder {
+    /** When true, implementation makes mode diagnostic checks. */
+    private static final boolean DEBUG_MODE = false;
+
     @Getter
     private final LinkedList<Vertex> topologicalSortList = new LinkedList<>();
     private final Graph graph;
     private final Vertex startVertex;
     private final Vertex exitVertex;
 
-    public List<Vertex> doJob() {
+    public List<Vertex> computePostLeads() {
         topologicalSortList.clear();
 
         int time = new DepthFirstSearch(graph, this::preProcessVertex, this::postProcessVertex).dfs(startVertex);
@@ -34,16 +37,18 @@ public class PostLeadsFinder {
                     "from the start node [" + startVertex.getKey() + "]");
         }
 
-        graph.clearTime();
-        ensureCorrectGraph();
+        if (DEBUG_MODE) {
+            graph.clearTime();
+            ensureCorrectState();
+        }
 
         return findPostLeads();
     }
 
     // Makes sure there are no dead end vertices except exit vertex.
-    private void ensureCorrectGraph() {
+    private void ensureCorrectState() {
         int totalTime = new DepthFirstSearch(graph, (time, u, v) -> {
-            verify(u == null || isExitVertex(u) || !u.getNodePayload().isDead(), "Expected to be live: " + u);
+            verify(u == null || isExitVertex(u) || !u.getNodePayload().isDead(), "Expected to be live: %s", u);
             if (u != null && !u.getNodePayload().isLiveEdge(v.getId())) {
                 // do not visit edges that are detected to be dead:
                 return false;

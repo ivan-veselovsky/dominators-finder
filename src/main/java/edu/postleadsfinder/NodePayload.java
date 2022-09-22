@@ -20,7 +20,7 @@ public class NodePayload {
 
     NodePayload(Vertex vertex) {
         this.vertex = vertex;
-        this.outDegreeWithoutDeadEdges = vertex.getOutgoingEdges().length;
+        this.outDegreeWithoutDeadEdges = vertex.getOutgoingEdges().size();
     }
 
     @Getter

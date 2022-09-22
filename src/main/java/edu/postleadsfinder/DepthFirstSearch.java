@@ -24,7 +24,7 @@ public class DepthFirstSearch {
         time++;
         if (preProcessFunction.apply(time, currentVertex, discoveredVertex)) {
 
-            for (Vertex outVertex: graph.outgoingNodes(discoveredVertex)) {
+            for (Vertex outVertex: graph.outgoingVertices(discoveredVertex)) {
                 time = dfsRecursive(time, discoveredVertex, outVertex);
             }
 

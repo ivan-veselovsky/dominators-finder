@@ -40,7 +40,7 @@ public class GraphPostLeadsFinderRestController {
 			final Vertex exitVertex = graphBuilder.exitVertex();
 
 			PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-			List<String> postLeadKeys = asKeys(finder.doJob());
+			List<String> postLeadKeys = asKeys(finder.computePostLeads());
 			String response = formatResponseText(postLeadKeys);
 
 			log.info("<<< Response: [{}]", response);
