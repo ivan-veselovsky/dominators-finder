@@ -38,13 +38,13 @@ of your solution.
 
 Solution is based on Depth First Search (DFS) algorithm, as per book 
 "Introduction to Algorithms" by T.H. Cormen, Ch.E. Leiserson, R.L. Rivest:    
-1) Build the DFS tree starting from the given Start vertex (_h_). (Finish vertex (_e2_) must 
+1) Build the DFS tree starting from the given Start vertex (_h_). (Exit vertex (_e2_) must 
  be reachable from the Start vertex (_h_), so it appears on the tree. Otherwise we throw an error.)
 2) Classify all the DFS edges as being of _TREE_, _FORWARD_, _BACKWARD_, or _CROSS_ kind.
 3) Remove loops by removing all _BACKWARD_ edges.
 4) Remove all "dead ends" (vertices with zero out-degree), taking into account that removal 
  of some vertices may cause other "dead ends" to appear. When this step is finished, the only "dead end" vertex
- is the Finish vertex. 
+ is the Exit vertex. 
 5) Take the remaining graph vertices in _topological sort order_. 
  (This is the descending order of "end processing time" in DFS algorithm).
 6) Calculate in-degree and out-degree for each vertex.  
@@ -77,3 +77,8 @@ Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`
 - By default server starts on non-standard port `10000`, as task description suggests.
 - When testing with `curl` please make sure to use `-H "Content-Type: application/json"` parameter, otherwise JSON gets encoded,
  and the service fails to parse it.
+
+
+#### Further Improvements
+
+- Make DFS traverse iterative. Now it is recursive, what can cause a stack overflow on large graphs.

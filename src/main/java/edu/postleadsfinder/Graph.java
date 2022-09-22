@@ -35,15 +35,6 @@ public class Graph {
         return Arrays.stream(childrenIndices).mapToObj(i -> vertices[i]).toList();
     }
 
-//    List<Vertex> outgoingNodesReverseOrder(Vertex vertex) {
-//        int[] childrenIndices = vertex.getOutgoingEdges();
-//        List<Vertex> list = new ArrayList<>(childrenIndices.length);
-//        for (int i=childrenIndices.length - 1; i>=0 ; i--) {
-//            list.add(vertices[i]);
-//        }
-//        return list;
-//    }
-
     Stream<Vertex> vertexStream() {
         return Arrays.stream(vertices);
     }

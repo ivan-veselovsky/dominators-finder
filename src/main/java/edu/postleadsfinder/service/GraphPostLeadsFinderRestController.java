@@ -23,7 +23,7 @@ public class GraphPostLeadsFinderRestController {
 
 	@GetMapping("/")
 	public String index() {
-		return "Greetings from graph-post-leads-finder! <br>" +
+		return "Welcome to graph-post-leads-finder! <br>" +
 			"Please use <a href=\"./swagger-ui/index.html\">Swagger UI</a> for all service methods description.";
 	}
 

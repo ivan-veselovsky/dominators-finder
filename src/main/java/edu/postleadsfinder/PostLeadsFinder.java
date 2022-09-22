@@ -26,7 +26,7 @@ public class PostLeadsFinder {
 
         int time = new DepthFirstSearch(graph, this::preProcessVertex, this::postProcessVertex).dfs(startVertex);
 
-        log.debug("Time: {}", () -> time);
+        log.debug("Total DFS traverse time: {}", () -> time);
 
         // check exit vertex was reached:
         if (exitVertex.getNodePayload().getStartTime() < 0) {
