@@ -49,8 +49,8 @@ Solution is based on Depth First Search (DFS) algorithm, as per book
  (This is the descending order of "end processing time" in DFS algorithm).
 6) Calculate in-degree and out-degree for each vertex.  
 7) Traverse the vertices in _topological sorting order_ maintaining _parallel edge count_ integer metric: 
- for each node reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
- Basing on this metric detect all the post-lead vertices: the post-lead is a node where this metric drops to zero.   
+ for each vertex reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
+ Basing on this metric detect all the post-lead vertices: the post-lead is a vertex where this metric drops to zero.   
 
 ##### Complexity
 

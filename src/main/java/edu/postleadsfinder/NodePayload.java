@@ -87,7 +87,7 @@ public class NodePayload {
         targetVertex.getNodePayload().decrementInDegree();
 
         if (isDead()) {
-            log.debug(() -> "Node " + vertex.getKey() + " became DEAD.");
+            log.debug(() -> "Vertex " + vertex.getKey() + " became DEAD.");
         }
     }
 

@@ -8,12 +8,12 @@ import java.util.List;
 import java.util.function.Function;
 
 /**
- * Represents a node of Graph.
+ * Represents a vertex of Graph.
  */
 @ToString
 public class Vertex {
     /**
-     * Integer id of the node.
+     * Integer id of the vertex.
      * The id is unique withing the Graph.
      * The ids are assigned sequentially, and are zero-based.
      * So, the smallest id is 0, and largest id is N-1, where N is the number of nodes in the Graph.
