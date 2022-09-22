@@ -27,12 +27,12 @@ public class PostLeadsFinder {
     public List<Vertex> computePostLeads() {
         topologicalSortList.clear();
 
-        int time = new DepthFirstSearch(graph, this::preProcessVertex, this::postProcessVertex).dfs(startVertex);
+        int time = new DepthFirstSearch(graph, this::preProcessVertex, this::postProcessVertex).dfsFrom(startVertex);
 
         log.debug("Total DFS traverse time: {}", () -> time);
 
         // check exit vertex was reached:
-        if (exitVertex.getNodePayload().getStartTime() < 0) {
+        if (exitVertex.getVertexPayload().getStartTime() < 0) {
             throw new IllegalArgumentException("Exit vertex [" + exitVertex.getKey() + "] appears to be unreachable " +
                     "from the start node [" + startVertex.getKey() + "]");
         }
@@ -48,53 +48,54 @@ public class PostLeadsFinder {
     // Makes sure there are no dead end vertices except exit vertex.
     private void ensureCorrectState() {
         int totalTime = new DepthFirstSearch(graph, (time, u, v) -> {
-            verify(u == null || isExitVertex(u) || !u.getNodePayload().isDead(), "Expected to be live: %s", u);
-            if (u != null && !u.getNodePayload().isLiveEdge(v.getId())) {
+            verify(u == null || isExitVertex(u) || !u.getVertexPayload().isDead(), "Expected to be live: %s", u);
+            if (u != null && !u.getVertexPayload().isLiveEdge(v.getId())) {
                 // do not visit edges that are detected to be dead:
                 return false;
             }
-            verify(isExitVertex(v) || !v.getNodePayload().isDead());
+            verify(isExitVertex(v) || !v.getVertexPayload().isDead());
 
-            final NodePayload.VertexColor discoveredVertexColor = v.getNodePayload().getColor();
-            if (discoveredVertexColor == NodePayload.VertexColor.WHITE) {
-                v.getNodePayload().updateTimeOnPush(time);
+            final VertexPayload.VertexColor discoveredVertexColor = v.getVertexPayload().getColor();
+            if (discoveredVertexColor == VertexPayload.VertexColor.WHITE) {
+                v.getVertexPayload().updateTimeOnPush(time);
 
                 return true;
             }
             return false;
         }, (time, u, v) -> {
-            v.getNodePayload().updateTimeOnPop(time);
+            v.getVertexPayload().updateTimeOnPop(time);
 
-            verify(isStartVertex(v) || v.getNodePayload().getInDegree() > 0);
-            verify(isExitVertex(v) || v.getNodePayload().getOutDegreeWithoutDeadEdges() > 0);
-            verify(u == null || u.getNodePayload().getOutDegreeWithoutDeadEdges() > 0);
+            verify(isStartVertex(v) || v.getVertexPayload().getInDegreeWithoutDeadEdges() > 0);
+            verify(isExitVertex(v) || v.getVertexPayload().getOutDegreeWithoutDeadEdges() > 0);
+            verify(u == null || u.getVertexPayload().getOutDegreeWithoutDeadEdges() > 0);
 
-            log.debug(() -> "degrees of vertex [" + v +"]: " + v.getNodePayload().getInDegree() + ":" +v.getNodePayload().getOutDegreeWithoutDeadEdges());
+            log.debug(() -> "degrees of vertex [" + v +"]: " + v.getVertexPayload().getInDegreeWithoutDeadEdges() + ":"
+                    + v.getVertexPayload().getOutDegreeWithoutDeadEdges());
             return true;
-        }).dfs(startVertex);
+        }).dfsFrom(startVertex);
 
         log.debug("total time: {}", () -> totalTime);
     }
 
     private boolean preProcessVertex(int time, @Nullable Vertex currentVertex /* null for start vertex */,
                                      Vertex discoveredVertex) {
-        final NodePayload.VertexColor discoveredVertexColor = discoveredVertex.getNodePayload().getColor();
+        final VertexPayload.VertexColor discoveredVertexColor = discoveredVertex.getVertexPayload().getColor();
 
         if (currentVertex != null) {
             EdgeKind edgeKind = colorEdge(currentVertex, discoveredVertex, discoveredVertexColor);
 
-            discoveredVertex.getNodePayload().incrementInDegree();
+            discoveredVertex.getVertexPayload().incrementInDegree();
 
             if (edgeKind == EdgeKind.BACKWARD
-                    || (discoveredVertex.getNodePayload().isDead() && !isExitVertex(discoveredVertex))) {
+                    || (discoveredVertex.getVertexPayload().isDead() && !isExitVertex(discoveredVertex))) {
                 log.debug(() -> "Discovered dead edge: " + edgeKind
                         + " from " + currentVertex + " --> " + discoveredVertex);
-                currentVertex.getNodePayload().markEdgeDead(discoveredVertex);
+                currentVertex.getVertexPayload().markEdgeDead(discoveredVertex);
             }
         }
 
-        if (discoveredVertexColor == NodePayload.VertexColor.WHITE) {
-            discoveredVertex.getNodePayload().updateTimeOnPush(time);
+        if (discoveredVertexColor == VertexPayload.VertexColor.WHITE) {
+            discoveredVertex.getVertexPayload().updateTimeOnPush(time);
 
             return true; // visit it!
         }
@@ -102,27 +103,27 @@ public class PostLeadsFinder {
         return false; // GREY or BLACK: already visited or being processed, do not visit again.
     }
 
-    private EdgeKind colorEdge(Vertex fromVertex, Vertex toVertex, NodePayload.VertexColor toVertexColor) {
+    private EdgeKind colorEdge(Vertex fromVertex, Vertex toVertex, VertexPayload.VertexColor toVertexColor) {
         EdgeKind edgeKind = switch (toVertexColor) {
             case WHITE -> EdgeKind.TREE;
             case GREY -> EdgeKind.BACKWARD;
-            case BLACK -> (fromVertex.getNodePayload().getStartTime() < toVertex.getNodePayload().getStartTime())
+            case BLACK -> (fromVertex.getVertexPayload().getStartTime() < toVertex.getVertexPayload().getStartTime())
                     ? EdgeKind.FORWARD : EdgeKind.CROSS;
         };
-        fromVertex.getNodePayload().setEdgeKind(toVertex.getId(), edgeKind);
+        fromVertex.getVertexPayload().setEdgeKind(toVertex.getId(), edgeKind);
         return edgeKind;
     }
 
     private boolean postProcessVertex(int time, @Nullable Vertex currentVertex /* null for start vertex */, Vertex discoveredVertex) {
-        discoveredVertex.getNodePayload().updateTimeOnPop(time);
+        discoveredVertex.getVertexPayload().updateTimeOnPop(time);
 
         // post-processing is done only for TREE-kind edges
-        assert currentVertex == null || currentVertex.getNodePayload().edgeKind(discoveredVertex.getId()) == EdgeKind.TREE;
+        assert currentVertex == null || currentVertex.getVertexPayload().edgeKind(discoveredVertex.getId()) == EdgeKind.TREE;
 
-        if (discoveredVertex.getNodePayload().isDead()
+        if (discoveredVertex.getVertexPayload().isDead()
                 && !isExitVertex(discoveredVertex)) {
             if (currentVertex != null) {
-                currentVertex.getNodePayload().markEdgeDead(discoveredVertex);
+                currentVertex.getVertexPayload().markEdgeDead(discoveredVertex);
             }
             return false;
         } else {
@@ -144,8 +145,8 @@ public class PostLeadsFinder {
         final List<Vertex> postLeadVertices = new LinkedList<>();
         int parallelEdgeCount = 0;
         for (Vertex vertex: topologicalSortList) {
-            int inDegree = vertex.getNodePayload().getInDegree();
-            int outDegree = vertex.getNodePayload().getOutDegreeWithoutDeadEdges();
+            int inDegree = vertex.getVertexPayload().getInDegreeWithoutDeadEdges();
+            int outDegree = vertex.getVertexPayload().getOutDegreeWithoutDeadEdges();
 
             assert isStartVertex(vertex) || inDegree > 0;
             assert isExitVertex(vertex) || outDegree > 0;

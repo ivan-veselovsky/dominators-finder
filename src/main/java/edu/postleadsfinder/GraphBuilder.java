@@ -27,7 +27,7 @@ public class GraphBuilder {
     private JGraphtVertex startVertex;
     private JGraphtVertex exitVertex;
 
-    private Function<Vertex, NodePayload> payloadFactoryFunction = NodePayload::new;
+    private Function<Vertex, VertexPayload> payloadFactoryFunction = VertexPayload::new;
 
     @RequiredArgsConstructor
     @Getter
@@ -41,7 +41,7 @@ public class GraphBuilder {
     /** NB: For record it would be {@code new Edge().equals(new Edge()) == true}, so it has to be a class. */
     static class JGraphtEdge {}
 
-    public void withPayloadFactoryFunction(Function<Vertex, NodePayload> factoryFunction) {
+    public void withPayloadFactoryFunction(Function<Vertex, VertexPayload> factoryFunction) {
         this.payloadFactoryFunction = factoryFunction;
     }
 

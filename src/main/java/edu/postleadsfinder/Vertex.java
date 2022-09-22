@@ -25,13 +25,13 @@ public class Vertex {
     @Getter
     private final List<Integer> outgoingEdges;
     @Getter
-    private final NodePayload nodePayload;
+    private final VertexPayload vertexPayload;
 
-    Vertex(int id, String key, int[] outgoingEdges, Function<Vertex, NodePayload> payloadFunction) {
+    Vertex(int id, String key, int[] outgoingEdges, Function<Vertex, VertexPayload> payloadFunction) {
         this.id = id;
         this.key = key;
         this.outgoingEdges = Arrays.stream(outgoingEdges).boxed().toList();
-        this.nodePayload = payloadFunction.apply(this);
+        this.vertexPayload = payloadFunction.apply(this);
     }
 
 }

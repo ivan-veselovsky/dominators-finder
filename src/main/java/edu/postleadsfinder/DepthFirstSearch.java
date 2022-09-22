@@ -16,7 +16,12 @@ public class DepthFirstSearch {
     private final EdgeFunction preProcessFunction;
     private final EdgeFunction postProcessFunction;
 
-    public int dfs(final Vertex vertex) {
+    /**
+     * Does the DFS traverse from the specified vertex.
+     * @param vertex The Vertex to start from.
+     * @return The "time" counter value.
+     */
+    public int dfsFrom(final Vertex vertex) {
         return dfsRecursive(0, null, vertex);
     }
 

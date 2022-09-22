@@ -8,6 +8,7 @@ import java.util.stream.Stream;
 
 /**
  * Represents a generic Directed Graph.
+ * All the Graph structure is immutable except the {@link VertexPayload}-s attached to each vertex.
  */
 public class Graph {
 
@@ -49,7 +50,7 @@ public class Graph {
      * Utility method. Can be used before next traversal to clear the "color" of Vertices.
      */
     void clearTime() {
-        vertexStream().forEach(v -> v.getNodePayload().clearTime());
+        vertexStream().forEach(v -> v.getVertexPayload().clearTime());
     }
 
 }

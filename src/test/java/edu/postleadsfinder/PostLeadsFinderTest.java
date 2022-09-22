@@ -36,23 +36,23 @@ class PostLeadsFinderTest {
         then(postLeadKeys).containsExactly("5", "7");
 
         // Start/End times:
-        then(graph.vertex(0).getNodePayload().getStartTime()).isEqualTo(-1);
-        then(graph.vertex(0).getNodePayload().getFinishTime()).isEqualTo(-1);
-        then(graph.vertex(1).getNodePayload().getStartTime()).isEqualTo(1);
-        then(graph.vertex(1).getNodePayload().getFinishTime()).isEqualTo(10);
-        then(graph.vertex(2).getNodePayload().getStartTime()).isEqualTo(2);
-        then(graph.vertex(2).getNodePayload().getFinishTime()).isEqualTo(8);
-        then(graph.vertex(3).getNodePayload().getStartTime()).isEqualTo(3);
-        then(graph.vertex(3).getNodePayload().getFinishTime()).isEqualTo(7);
-        then(graph.vertex(4).getNodePayload().getStartTime()).isEqualTo(5);
-        then(graph.vertex(4).getNodePayload().getFinishTime()).isEqualTo(6);
+        then(graph.vertex(0).getVertexPayload().getStartTime()).isEqualTo(-1);
+        then(graph.vertex(0).getVertexPayload().getFinishTime()).isEqualTo(-1);
+        then(graph.vertex(1).getVertexPayload().getStartTime()).isEqualTo(1);
+        then(graph.vertex(1).getVertexPayload().getFinishTime()).isEqualTo(10);
+        then(graph.vertex(2).getVertexPayload().getStartTime()).isEqualTo(2);
+        then(graph.vertex(2).getVertexPayload().getFinishTime()).isEqualTo(8);
+        then(graph.vertex(3).getVertexPayload().getStartTime()).isEqualTo(3);
+        then(graph.vertex(3).getVertexPayload().getFinishTime()).isEqualTo(7);
+        then(graph.vertex(4).getVertexPayload().getStartTime()).isEqualTo(5);
+        then(graph.vertex(4).getVertexPayload().getFinishTime()).isEqualTo(6);
 
         // Edges color:
-        then(graph.vertex(1).getNodePayload().edgeKind(2)).isEqualTo(EdgeKind.TREE);
-        then(graph.vertex(1).getNodePayload().edgeKind(3)).isEqualTo(EdgeKind.FORWARD);
-        then(graph.vertex(2).getNodePayload().edgeKind(3)).isEqualTo(EdgeKind.TREE);
-        then(graph.vertex(3).getNodePayload().edgeKind(4)).isEqualTo(EdgeKind.TREE);
-        then(graph.vertex(3).getNodePayload().edgeKind(1)).isEqualTo(EdgeKind.BACKWARD);
+        then(graph.vertex(1).getVertexPayload().edgeKind(2)).isEqualTo(EdgeKind.TREE);
+        then(graph.vertex(1).getVertexPayload().edgeKind(3)).isEqualTo(EdgeKind.FORWARD);
+        then(graph.vertex(2).getVertexPayload().edgeKind(3)).isEqualTo(EdgeKind.TREE);
+        then(graph.vertex(3).getVertexPayload().edgeKind(4)).isEqualTo(EdgeKind.TREE);
+        then(graph.vertex(3).getVertexPayload().edgeKind(1)).isEqualTo(EdgeKind.BACKWARD);
     }
 
     @Test

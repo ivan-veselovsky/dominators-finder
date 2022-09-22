@@ -9,16 +9,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import static edu.postleadsfinder.NodePayload.VertexColor.*;
+import static edu.postleadsfinder.VertexPayload.VertexColor.*;
 
 /**
  * Mutable auxiliary data class attached to a {@link Vertex}.
+ * It holds a reference to its Vertex and some auxiliary mutable data for Graph processing.
  */
 @Log4j2
-public class NodePayload {
+public class VertexPayload {
     private final Vertex vertex;
 
-    NodePayload(Vertex vertex) {
+    VertexPayload(Vertex vertex) {
         this.vertex = vertex;
         this.outDegreeWithoutDeadEdges = vertex.getOutgoingEdges().size();
     }
@@ -30,19 +31,22 @@ public class NodePayload {
 
     private Map<Integer, EdgeKind> edgeKinds;
 
+    /**
+     * Edges that go to "dead end" Vertices.
+     */
     private Set<Integer> deadEdges;
 
     @Getter
-    private int inDegree = 0;
+    private int inDegreeWithoutDeadEdges = 0;
     @Getter
     private int outDegreeWithoutDeadEdges;
 
     void incrementInDegree() {
-        inDegree++;
+        inDegreeWithoutDeadEdges++;
     }
     void decrementInDegree() {
-        inDegree--;
-        assert inDegree >= 0;
+        inDegreeWithoutDeadEdges--;
+        assert inDegreeWithoutDeadEdges >= 0;
     }
 
     VertexColor getColor() {
@@ -84,7 +88,7 @@ public class NodePayload {
         outDegreeWithoutDeadEdges--;
         assert outDegreeWithoutDeadEdges >= 0;
 
-        targetVertex.getNodePayload().decrementInDegree();
+        targetVertex.getVertexPayload().decrementInDegree();
 
         if (isDead()) {
             log.debug(() -> "Vertex " + vertex.getKey() + " became DEAD.");
