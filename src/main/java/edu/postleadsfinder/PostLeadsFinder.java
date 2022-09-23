@@ -1,6 +1,5 @@
 package edu.postleadsfinder;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -18,7 +17,6 @@ public class PostLeadsFinder {
     /** When true, implementation makes mode diagnostic checks. */
     private static final boolean DEBUG_MODE = Util.areAssertionsEnabled();
 
-    @Getter
     private final LinkedList<Vertex> topologicalSortList = new LinkedList<>();
     private final Graph graph;
     private final Vertex startVertex;
