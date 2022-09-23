@@ -20,8 +20,14 @@ public class Vertex {
      */
     @Getter
     private final int id;
+    /**
+     * String key of the Vertex as specified in the dot-format input.
+     */
     @Getter
     private final String key;
+    /**
+     * Outgoing edge list, with each edge being identified by its target vertex {@code id}.
+     */
     @Getter
     private final List<Integer> outgoingEdges;
     @Getter
