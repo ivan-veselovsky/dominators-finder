@@ -4,7 +4,11 @@ import com.google.common.base.Verify;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Represents a generic Directed Graph.
@@ -13,10 +17,12 @@ import java.util.stream.Stream;
 public class Graph {
 
     private final Vertex[] vertices;
+    private final Map<String, Vertex> verticesByKeyMap;
 
     Graph(Vertex[] vertices) {
         checkInvariants(vertices);
         this.vertices = vertices;
+        this.verticesByKeyMap = Arrays.stream(vertices).collect(toMap(Vertex::getKey, Function.identity()));
     }
 
     private void checkInvariants(Vertex[] vertices) {
@@ -44,6 +50,10 @@ public class Graph {
 
     Vertex vertex(int index) {
         return vertices[index];
+    }
+
+    Vertex vertex(String key) {
+        return verticesByKeyMap.get(key);
     }
 
     /**

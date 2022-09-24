@@ -8,13 +8,13 @@ import org.jgrapht.nio.dot.DOTImporter;
 
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static com.google.common.base.Verify.verify;
+import static java.util.Comparator.comparing;
 
 
 public class GraphBuilder {
@@ -103,16 +103,20 @@ public class GraphBuilder {
     }
 
     void buildGraph() {
+        final Set<JGraphtVertex> vertexSet = new TreeSet<>(comparing(JGraphtVertex::getKey));
+        Set<JGraphtVertex> set = jgraphtGraph.vertexSet();
+        vertexSet.addAll(set);
+        verify(set.size() == vertexSet.size());
+
         int vertexId = 0;
-        final Set<JGraphtVertex> vertexes = jgraphtGraph.vertexSet();
-        for (JGraphtVertex vertex: vertexes) {
+        for (JGraphtVertex vertex: vertexSet) {
             vertex.id = vertexId;
             vertexId++;
         }
 
-        final Vertex[] vertices = new Vertex[vertexes.size()];
+        final Vertex[] vertices = new Vertex[vertexSet.size()];
 
-        for (JGraphtVertex vertex: vertexes) {
+        for (JGraphtVertex vertex: vertexSet) {
             int[] outIndexes = jgraphtGraph.outgoingEdgesOf(vertex).stream()
                     .map(edge -> jgraphtGraph.getEdgeTarget(edge))
                     .mapToInt(JGraphtVertex::getId)

@@ -65,9 +65,9 @@ class PostLeadsFinderTest {
                 "\"h\": \"a\"," +
 """ 
 "graph": "digraph graphname{
-a -> b
 b -> c
 b -> d
+a -> b
 c -> e
 d -> e
 e -> f
