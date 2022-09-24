@@ -44,6 +44,7 @@ public class Graph {
         return vertex.getOutgoingEdges().stream().map(i -> vertices[i]).toList();
     }
 
+    /** Vertices appear in the Stream sorted by String key and id. */
     Stream<Vertex> vertexStream() {
         return Arrays.stream(vertices);
     }
@@ -52,6 +53,7 @@ public class Graph {
         return vertices[index];
     }
 
+    /** Vertex lookup by key. */
     Vertex vertex(String key) {
         return verticesByKeyMap.get(key);
     }

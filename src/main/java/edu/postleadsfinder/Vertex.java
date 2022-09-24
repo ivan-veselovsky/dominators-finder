@@ -13,20 +13,22 @@ import java.util.function.Function;
 @ToString
 public class Vertex {
     /**
-     * Integer id of the vertex.
-     * The id is unique withing the Graph.
+     * Integer {@code id} of the vertex.
+     * The {@code id} is unique withing the Graph.
      * The ids are assigned sequentially, and are zero-based.
      * So, the smallest id is 0, and largest id is N-1, where N is the number of nodes in the Graph.
      */
     @Getter
     private final int id;
     /**
-     * String key of the Vertex as specified in the dot-format input.
+     * String {@code key} of the Vertex as specified in the dot-format input.
+     * The {@code key} is unique withing the Graph.
      */
     @Getter
     private final String key;
     /**
      * Outgoing edge list, with each edge being identified by its target vertex {@code id}.
+     * The {@code id}s in the List are unique and sorted in ascending order.
      */
     @Getter
     private final List<Integer> outgoingEdges;
@@ -36,8 +38,17 @@ public class Vertex {
     Vertex(int id, String key, int[] outgoingEdges, Function<Vertex, VertexPayload> payloadFunction) {
         this.id = id;
         this.key = key;
+        assert areSorted(outgoingEdges);
         this.outgoingEdges = Arrays.stream(outgoingEdges).boxed().toList();
         this.vertexPayload = payloadFunction.apply(this);
     }
 
+    boolean areSorted(int[] indexes) {
+        for (int i = 1; i < indexes.length; i++) {
+            if (indexes[i] <= indexes[i - 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
 }

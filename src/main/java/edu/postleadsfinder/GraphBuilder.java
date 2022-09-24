@@ -121,10 +121,22 @@ public class GraphBuilder {
                     .map(edge -> jgraphtGraph.getEdgeTarget(edge))
                     .mapToInt(JGraphtVertex::getId)
                     .toArray();
+            assert areCorrectIndices(outIndexes, vertexSet.size());
+            // NB: make the order of outgoing edges fully deterministic: sort them by id:
+            Arrays.sort(outIndexes);
             vertices[vertex.getId()] = new Vertex(vertex.getId(), vertex.getKey(), outIndexes, payloadFactoryFunction);
         }
 
         graph = new Graph(vertices);
+    }
+
+    boolean areCorrectIndices(int[] indexes, int numNodes) {
+        for (int index : indexes) {
+            if (index < 0 || index >= numNodes) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Vertex startVertex() {
