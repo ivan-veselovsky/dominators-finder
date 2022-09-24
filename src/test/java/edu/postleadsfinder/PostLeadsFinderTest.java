@@ -565,4 +565,84 @@ n -> a
         then(postLeads).containsExactly("B");
     }
 
+    @Test
+    void all2all_three_vertices() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"B\"," +
+                """ 
+                        "graph": "digraph graphname{
+                        A -> A
+                        A -> B
+                        A -> C
+                        
+                        B -> A
+                        B -> B
+                        B -> C
+                        
+                        C -> A
+                        C -> B
+                        C -> C
+                        }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        List<String> postLeads = asKeys(new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads());
+        then(postLeads).containsExactly("B");
+    }
+
+    @Test
+    void butterfly_shape() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"E\"," +
+                """ 
+                        "graph": "digraph graphname{
+                        A -> A
+                        A -> B
+                        A -> C
+                        
+                        B -> A
+                        B -> B
+                        B -> C
+                        
+                        C -> A
+                        C -> B
+                        C -> C
+                        C -> D
+                        C -> E
+                        
+                        D -> C
+                        D -> E
+                        D -> D
+                        
+                        E -> D
+                        E -> C
+                        E -> E
+                        }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        List<String> postLeads = asKeys(new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads());
+        then(postLeads).containsExactly("C", "E");
+
+        Vertex vertexB = graph.vertex("B");
+        postLeads = asKeys(new PostLeadsFinder(graph, startVertex, vertexB).computePostLeads());
+        then(postLeads).containsExactly("B");
+
+        Vertex vertexD = graph.vertex("D");
+        postLeads = asKeys(new PostLeadsFinder(graph, startVertex, vertexD).computePostLeads());
+        then(postLeads).containsExactly("C", "D");
+    }
+
 }

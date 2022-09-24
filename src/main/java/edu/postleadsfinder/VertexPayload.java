@@ -19,27 +19,20 @@ import static edu.postleadsfinder.VertexPayload.VertexColor.*;
 public class VertexPayload {
     private final Vertex vertex;
 
-    VertexPayload(Vertex vertex) {
-        this.vertex = vertex;
-        this.outDegreeWithoutDeadEdges = vertex.getOutgoingEdges().size();
-    }
-
-    @Getter
-    private int startTime = -1;
-    @Getter
-    private int finishTime = -1;
+    @Getter private int startTime;
+    @Getter private int finishTime;
 
     private Map<Integer, EdgeKind> edgeKinds;
-
-    /**
-     * Edges that go to "dead end" branches.
-     */
+    /** Edges that go to "dead end" branches. */
     private Set<Integer> deadEdges;
 
-    @Getter
-    private int inDegreeWithoutDeadEdges;
-    @Getter
-    private int outDegreeWithoutDeadEdges;
+    @Getter private int inDegreeWithoutDeadEdges;
+    @Getter private int outDegreeWithoutDeadEdges;
+
+    VertexPayload(Vertex vertex) {
+        this.vertex = vertex;
+        clear();
+    }
 
     void incrementInDegree() {
         inDegreeWithoutDeadEdges++;
@@ -135,6 +128,17 @@ public class VertexPayload {
     void clearTime() {
         startTime = -1;
         finishTime = -1;
+    }
+
+    /** Brings all the mutable payload data to initial state. */
+    public void clear() {
+        clearTime();
+
+        inDegreeWithoutDeadEdges = 0;
+        outDegreeWithoutDeadEdges = vertex.getOutgoingEdges().size();
+
+        edgeKinds = null;
+        deadEdges = null;
     }
 
     enum VertexColor {

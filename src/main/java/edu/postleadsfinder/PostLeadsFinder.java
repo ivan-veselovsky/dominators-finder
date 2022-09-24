@@ -23,6 +23,7 @@ public class PostLeadsFinder {
     private final Vertex exitVertex;
 
     public List<Vertex> computePostLeads() {
+        graph.clearPayload();
         topologicalSortList.clear();
 
         int time = new DepthFirstSearch(graph, this::preProcessVertex, this::postProcessVertex).dfsFrom(startVertex);

@@ -58,9 +58,13 @@ public class Graph {
         return verticesByKeyMap.get(key);
     }
 
-    /**
-     * Utility method. Can be used before next traversal to clear the "color" of Vertices.
-     */
+    /** Brings all the mutable data to blank state. */
+    void clearPayload() {
+        vertexStream().forEach(v -> v.getVertexPayload().clear());
+    }
+
+    /** Utility method. Can be used before next traversal to clear the "color" of Vertices,
+     * while preserving other mutable payload data. */
     void clearTime() {
         vertexStream().forEach(v -> v.getVertexPayload().clearTime());
     }
