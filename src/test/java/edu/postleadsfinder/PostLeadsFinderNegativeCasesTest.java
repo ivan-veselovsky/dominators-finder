@@ -2,9 +2,6 @@ package edu.postleadsfinder;
 
 import org.junit.jupiter.api.Test;
 
-import java.util.List;
-
-import static edu.postleadsfinder.PostLeadsFinder.asKeys;
 import static org.assertj.core.api.BDDAssertions.*;
 
 class PostLeadsFinderNegativeCasesTest {
@@ -111,30 +108,6 @@ class PostLeadsFinderNegativeCasesTest {
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
                 new PostLeadsFinder(graph, startVertex, vertexT).computePostLeads()
         ).withMessageContaining("Exit vertex [T] appears to be unreachable from the start node [A]");
-    }
-
-    @Test
-    void test0() {
-        GraphBuilder graphBuilder = new GraphBuilder();
-        graphBuilder.build("{" +
-                "\"h\": \"A\"," +
-                "\"e2\": \"B\"," +
-                """ 
-                        "graph": "digraph graphname{
-                        A -> B
-                        A -> A
-                        B -> A
-                        B -> B
-                        }"
-                """
-                + "}");
-        final Graph graph = graphBuilder.getGraph();
-
-        final Vertex startVertex = graphBuilder.startVertex();
-        final Vertex exitVertex = graphBuilder.exitVertex();
-
-        List<String> postLeads = asKeys(new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads());
-        then(postLeads).containsExactly("B");
     }
 
 }

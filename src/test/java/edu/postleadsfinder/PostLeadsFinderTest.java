@@ -541,4 +541,28 @@ n -> a
         then(keyList).containsExactly(expectedKeys);
     }
 
+    @Test
+    void all2all_two_vertices() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"B\"," +
+                """ 
+                        "graph": "digraph graphname{
+                        A -> B
+                        A -> A
+                        B -> A
+                        B -> B
+                        }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        List<String> postLeads = asKeys(new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads());
+        then(postLeads).containsExactly("B");
+    }
+
 }
