@@ -10,6 +10,104 @@ import static edu.postleadsfinder.PostLeadsFinder.asKeys;
 import static org.assertj.core.api.BDDAssertions.then;
 
 class PostLeadsFinderTest {
+    @Test
+    void single_vertex_graph() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"e2\": \"A\"," +
+                "\"h\": \"A\"," +
+                """ 
+                  "graph": "digraph graphname{ A -> A }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).isEmpty();
+    }
+
+    @Test
+    void two_vertices_graph() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"e2\": \"A\"," +
+                "\"h\": \"A\"," +
+                """ 
+                  "graph": "digraph graphname{ A -> B; A -> A }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).isEmpty();
+    }
+
+    @Test
+    void two_vertices_graph_2() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"B\"," +
+                """ 
+                  "graph": "digraph graphname{ A -> B; B -> A; A -> A; B -> B }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).containsExactly("B");
+    }
+
+
+    @Test
+    void several_post_leads() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"e2\": \"K\"," +
+                "\"h\": \"A\"," +
+                """ 
+                  "graph": "digraph graphname{ 
+                  A -> B 
+                  B -> C
+                  B -> D 
+                  C -> C
+                  D -> E 
+                  D -> F
+                  D -> G
+                  E -> G 
+                  F -> G
+                  G -> H
+                  G -> I 
+                  G -> J
+                  G -> K
+                  }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).containsExactly("B", "D", "G", "K");
+    }
 
     @Test
     void example_from_task_description() {

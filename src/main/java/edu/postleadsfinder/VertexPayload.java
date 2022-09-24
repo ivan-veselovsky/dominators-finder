@@ -83,7 +83,9 @@ public class VertexPayload {
         int targetVertexId = targetVertex.getId();
         assert edgeKinds.containsKey(targetVertexId);
         boolean added = deadEdges.add(targetVertexId);
-        assert added;
+        if (!added) {
+            return; // NB: It is possible to discover the same dead edge twice.
+        }
 
         outDegreeWithoutDeadEdges--;
         assert outDegreeWithoutDeadEdges >= 0;
