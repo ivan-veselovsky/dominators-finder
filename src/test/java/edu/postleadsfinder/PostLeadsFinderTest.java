@@ -78,23 +78,32 @@ class PostLeadsFinderTest {
     void several_post_leads() {
         GraphBuilder graphBuilder = new GraphBuilder();
         graphBuilder.build("{" +
-                "\"e2\": \"K\"," +
                 "\"h\": \"A\"," +
+                "\"e2\": \"K\"," +
                 """ 
                   "graph": "digraph graphname{ 
-                  A -> B 
+                  A -> B
+                   
                   B -> C
-                  B -> D 
-                  C -> C
+                  B -> D
+                   
+                  C -> D
+                  
                   D -> E 
                   D -> F
                   D -> G
+                  
                   E -> G 
                   F -> G
+                  
                   G -> H
                   G -> I 
                   G -> J
                   G -> K
+                  
+                  H -> K
+                  I -> K
+                  J -> K 
                   }"
                 """
                 + "}");
@@ -643,6 +652,30 @@ n -> a
         Vertex vertexD = graph.vertex("D");
         postLeads = asKeys(new PostLeadsFinder(graph, startVertex, vertexD).computePostLeads());
         then(postLeads).containsExactly("C", "D");
+    }
+
+    @Test
+    void edge_made_dead_twice_simplest_example() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"B\"," +
+                """ 
+                  "graph": "digraph graphname{ 
+                    A -> B
+                    A -> C
+                  }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).containsExactly("B");
     }
 
 }

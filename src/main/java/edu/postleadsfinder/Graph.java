@@ -59,7 +59,7 @@ public class Graph {
     }
 
     /** Brings all the mutable data to blank state. */
-    void clearPayload() {
+    public void clearPayload() {
         vertexStream().forEach(v -> v.getVertexPayload().clear());
     }
 

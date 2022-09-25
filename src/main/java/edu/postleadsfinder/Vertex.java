@@ -1,7 +1,6 @@
 package edu.postleadsfinder;
 
 import lombok.Getter;
-import lombok.ToString;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.function.Function;
 /**
  * Represents a vertex of Graph.
  */
-@ToString
 public class Vertex {
     /**
      * Integer {@code id} of the vertex.
@@ -43,12 +41,17 @@ public class Vertex {
         this.vertexPayload = payloadFunction.apply(this);
     }
 
-    boolean areSorted(int[] indexes) {
+    private boolean areSorted(int[] indexes) {
         for (int i = 1; i < indexes.length; i++) {
             if (indexes[i] <= indexes[i - 1]) {
                 return false;
             }
         }
         return true;
+    }
+
+    @Override
+    public String toString() {
+        return key;
     }
 }
