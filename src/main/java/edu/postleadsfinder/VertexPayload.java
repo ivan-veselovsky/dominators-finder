@@ -86,7 +86,8 @@ public class VertexPayload {
     }
 
     boolean isDead() {
-        return outDegreeWithoutDeadEdges <= 0;
+        assert outDegreeWithoutDeadEdges >= 0;
+        return outDegreeWithoutDeadEdges == 0;
     }
 
     void setEdgeKind(Vertex targetVertex, EdgeKind edgeKind) {
