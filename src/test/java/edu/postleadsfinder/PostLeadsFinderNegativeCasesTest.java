@@ -110,4 +110,74 @@ class PostLeadsFinderNegativeCasesTest {
         ).withMessageContaining("Exit vertex [T] appears to be unreachable from the start node [A]");
     }
 
+    @Test
+    void unreachable_finish() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"B\"," +
+                """ 
+                  "graph": "digraph graphname{ B -> A }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
+                new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads())
+                .withMessageContaining("unreachable");
+    }
+
+    @Test
+    void unreachable_finish_not_simply_connected() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"B\"," +
+                """ 
+                  "graph": "digraph graphname{ 
+                    A 
+                    B 
+                  }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
+                new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads())
+                .withMessageContaining("unreachable");
+    }
+
+    @Test
+    void unreachable_finish_two_loops_not_simply_connected() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"C\"," +
+                """ 
+                  "graph": "digraph graphname{
+                    A -> A
+                    A -> B
+                    B -> A
+                    C -> D
+                    D -> C
+                    D -> D
+                  }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
+                        new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads())
+                .withMessageContaining("unreachable");
+    }
+
 }

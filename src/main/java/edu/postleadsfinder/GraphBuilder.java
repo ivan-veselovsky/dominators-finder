@@ -94,12 +94,10 @@ public class GraphBuilder {
         final String startNodeKey = inputData.getStartNodeKey();
         startVertex =  vertexMap.get(startNodeKey);
         Preconditions.checkArgument(startVertex != null, "Start vertex [%s] must be present in the Graph.", startNodeKey);
-        Preconditions.checkArgument(jgraphtGraph.outDegreeOf(startVertex) > 0, "Start vertex [%s] must have outgoing edges.", startNodeKey);
 
         final String exitNodeKey = inputData.getExitNodeKey();
         exitVertex =  vertexMap.get(exitNodeKey);
         Preconditions.checkArgument(exitVertex != null, "Exit vertex [%s] must be present in the Graph.", exitNodeKey);
-        Preconditions.checkArgument(jgraphtGraph.inDegreeOf(exitVertex) > 0, "Exit vertex [%s] must have incoming edges.", exitNodeKey);
     }
 
     void buildGraph() {

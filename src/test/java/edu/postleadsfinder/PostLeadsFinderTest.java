@@ -17,7 +17,7 @@ class PostLeadsFinderTest {
                 "\"e2\": \"A\"," +
                 "\"h\": \"A\"," +
                 """ 
-                  "graph": "digraph graphname{ A -> A }"
+                  "graph": "digraph graphname{ A }"
                 """
                 + "}");
         final Graph graph = graphBuilder.getGraph();
@@ -28,17 +28,17 @@ class PostLeadsFinderTest {
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
         List<String> keyList = asKeys(finder.computePostLeads());
 
-        then(keyList).isEmpty();
+        then(keyList).isEmpty(); // By convention start node is skipped.
     }
 
     @Test
-    void two_vertices_graph() {
+    void simplest_graph_two_vertices() {
         GraphBuilder graphBuilder = new GraphBuilder();
         graphBuilder.build("{" +
-                "\"e2\": \"A\"," +
                 "\"h\": \"A\"," +
+                "\"e2\": \"B\"," +
                 """ 
-                  "graph": "digraph graphname{ A -> B; A -> A }"
+                  "graph": "digraph graphname{ A -> B }"
                 """
                 + "}");
         final Graph graph = graphBuilder.getGraph();
@@ -48,12 +48,15 @@ class PostLeadsFinderTest {
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
         List<String> keyList = asKeys(finder.computePostLeads());
+        then(keyList).containsExactly("B");
 
+        Vertex vertexA = graph.vertex("A");
+        keyList = asKeys(new PostLeadsFinder(graph, vertexA, vertexA).computePostLeads());
         then(keyList).isEmpty();
     }
 
     @Test
-    void two_vertices_graph_2() {
+    void two_vertices_graph_fully_connected() {
         GraphBuilder graphBuilder = new GraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
@@ -69,10 +72,12 @@ class PostLeadsFinderTest {
 
         PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
         List<String> keyList = asKeys(finder.computePostLeads());
-
         then(keyList).containsExactly("B");
-    }
 
+        Vertex vertexA = graph.vertex("A");
+        keyList = asKeys(new PostLeadsFinder(graph, vertexA, vertexA).computePostLeads());
+        then(keyList).isEmpty();
+    }
 
     @Test
     void several_post_leads() {
