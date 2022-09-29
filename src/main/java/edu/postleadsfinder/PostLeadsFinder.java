@@ -41,7 +41,9 @@ public class PostLeadsFinder {
             ensureCorrectState();
         }
 
-        return findPostLeads();
+        List<Vertex> postLeads = findPostLeads();
+        filterOutStartNode(postLeads);
+        return postLeads;
     }
 
     // Makes sure there are no dead end vertices except exit vertex.
@@ -165,9 +167,7 @@ public class PostLeadsFinder {
 
             parallelEdgeCount -= inDegree;
 
-            // NB: according to task description the start vertex should *not* be present in the result,
-            // so we explicitly skip it:
-            if ((parallelEdgeCount == 0) && !isStartVertex(vertex)) {
+            if (parallelEdgeCount == 0) {
                 postLeadVertices.add(vertex);
             }
 
@@ -177,6 +177,13 @@ public class PostLeadsFinder {
                     || (!isExitVertex(vertex) && parallelEdgeCount > 0);
         }
         return postLeadVertices;
+    }
+
+    /** NB: according to task description the start vertex should *not* be present in the result,
+     so we explicitly skip it. */
+    private void filterOutStartNode(List<Vertex> allPostLeads) {
+        Vertex first = allPostLeads.remove(0);
+        assert isStartVertex(first);
     }
 
     public static List<String> asKeys(Collection<Vertex> vertices) {

@@ -683,4 +683,49 @@ n -> a
         then(keyList).containsExactly("B");
     }
 
+
+    @Test
+    void many_dead_ends() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"K\"," +
+                """ 
+                        "graph": "digraph graphname{
+                        A -> B
+                        A -> C
+                        B -> M
+                        B -> D
+                        C -> D
+                        D -> N
+                        
+                        D -> E
+                        D -> F
+                        E -> P
+                        F -> Q -> R
+                        E -> G
+                        F -> G
+                        
+                        E -> H
+                        H -> I
+                        H -> J
+
+                        G -> K -> U -> V
+                        V -> K
+                        X -> K
+                        U -> W
+                        K -> X
+                        G -> L -> T
+                        }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        List<String> postLeads = asKeys(new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads());
+        then(postLeads).containsExactly("D", "G", "K");
+    }
+
 }
