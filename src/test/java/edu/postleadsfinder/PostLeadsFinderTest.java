@@ -86,7 +86,7 @@ class PostLeadsFinderTest {
                 "\"h\": \"A\"," +
                 "\"e2\": \"K\"," +
                 """ 
-                  "graph": "digraph graphname{ 
+                  "graph": "digraph graphname{
                   A -> B
                    
                   B -> C
@@ -94,21 +94,21 @@ class PostLeadsFinderTest {
                    
                   C -> D
                   
-                  D -> E 
+                  D -> E
                   D -> F
                   D -> G
                   
-                  E -> G 
+                  E -> G
                   F -> G
                   
                   G -> H
-                  G -> I 
+                  G -> I
                   G -> J
                   G -> K
                   
                   H -> K
                   I -> K
-                  J -> K 
+                  J -> K
                   }"
                 """
                 + "}");
@@ -126,11 +126,19 @@ class PostLeadsFinderTest {
     @Test
     void example_from_task_description() {
         GraphBuilder graphBuilder = new GraphBuilder();
-        graphBuilder.build("{" +
-                "\"e2\": \"7\"," +
-                "\"h\": \"2\"," +
-                "\"graph\": \" digraph graphname{\n1->2\n2->3\n2->5\n5->2\n3->5\n5->7}\"" +
-                "}");
+        graphBuilder.build("""
+                {"e2": "7",
+                 "h": "2",
+                 "graph": " digraph graphname{
+                    1->2
+                    2->3
+                    2->5
+                    5->2
+                    3->5
+                    5->7
+                   }"
+                }
+                """);
         final Graph graph = graphBuilder.getGraph();
 
         final Vertex startVertex = graphBuilder.startVertex();
@@ -666,7 +674,7 @@ n -> a
                 "\"h\": \"A\"," +
                 "\"e2\": \"B\"," +
                 """ 
-                  "graph": "digraph graphname{ 
+                  "graph": "digraph graphname{
                     A -> B
                     A -> C
                   }"
@@ -683,6 +691,26 @@ n -> a
         then(keyList).containsExactly("B");
     }
 
+    @Test
+    void single_vertex() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"A\"," +
+                """ 
+                  "graph": "digraph graphname{ A }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).isEmpty();
+    }
 
     @Test
     void many_dead_ends() {

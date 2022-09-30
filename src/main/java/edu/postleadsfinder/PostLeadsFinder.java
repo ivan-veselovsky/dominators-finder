@@ -42,7 +42,7 @@ public class PostLeadsFinder {
         }
 
         List<Vertex> postLeads = findPostLeads();
-        filterOutStartNode(postLeads);
+        filterOutStartVertex(postLeads);
         return postLeads;
     }
 
@@ -54,18 +54,9 @@ public class PostLeadsFinder {
                 // do not visit edges that are detected to be dead:
                 return false;
             }
-            verify(isExitVertex(v) || !v.getVertexPayload().isDead(), "Vertex " + v + " expected to be alive.");
-
-            final VertexPayload.VertexColor discoveredVertexColor = v.getVertexPayload().getColor();
-            if (discoveredVertexColor == VertexPayload.VertexColor.WHITE) {
-                v.getVertexPayload().updateTimeOnPush(time);
-
-                return true;
-            }
-            return false;
+            verify(isExitVertex(v) || !v.getVertexPayload().isDead(), "Vertex %s expected to be alive.", v);
+            return true;
         }, (time, u, v) -> {
-            v.getVertexPayload().updateTimeOnPop(time);
-
             verify(isStartVertex(v) || v.getVertexPayload().getInDegreeWithoutDeadEdges() > 0);
             verify(isExitVertex(v) || v.getVertexPayload().getOutDegreeWithoutDeadEdges() > 0);
             verify(u == null || u.getVertexPayload().getOutDegreeWithoutDeadEdges() > 0);
@@ -80,10 +71,8 @@ public class PostLeadsFinder {
 
     private boolean preProcessVertex(int time, @Nullable Vertex currentVertex /* null for start vertex */,
                                      Vertex discoveredVertex) {
-        final VertexPayload.VertexColor discoveredVertexColor = discoveredVertex.getVertexPayload().getColor();
-
         if (currentVertex != null) {
-            EdgeKind edgeKind = colorEdge(currentVertex, discoveredVertex, discoveredVertexColor);
+            EdgeKind edgeKind = colorEdge(currentVertex, discoveredVertex);
 
             discoveredVertex.getVertexPayload().incrementInDegree();
 
@@ -91,7 +80,7 @@ public class PostLeadsFinder {
             if (edgeKind == EdgeKind.BACKWARD) {
                 log.debug(() -> "in: BACKWARD edge marked dead: " + currentVertex + " -> " + discoveredVertex);
                 deadEdge = true;
-            } if (discoveredVertex.getVertexPayload().isDead() && !isExitVertex(discoveredVertex)) {
+            } else if (discoveredVertex.getVertexPayload().isDead() && !isExitVertex(discoveredVertex)) {
                 log.debug(() -> "in: edge to DEAD vertex marked dead: " + currentVertex.getVertexPayload().edgeKind(discoveredVertex.getId())
                         + " " + currentVertex + " -> " + discoveredVertex);
                 deadEdge = true;
@@ -101,17 +90,11 @@ public class PostLeadsFinder {
             }
         }
 
-        if (discoveredVertexColor == VertexPayload.VertexColor.WHITE) {
-            discoveredVertex.getVertexPayload().updateTimeOnPush(time);
-
-            return true; // visit it!
-        }
-
-        return false; // GREY or BLACK: already visited or being processed, do not visit again.
+        return true;
     }
 
-    private EdgeKind colorEdge(Vertex fromVertex, Vertex toVertex, VertexPayload.VertexColor toVertexColor) {
-        EdgeKind edgeKind = switch (toVertexColor) {
+    private EdgeKind colorEdge(Vertex fromVertex, Vertex toVertex) {
+        EdgeKind edgeKind = switch (toVertex.getVertexPayload().getColor()) {
             case WHITE -> EdgeKind.TREE;
             case GREY -> EdgeKind.BACKWARD;
             case BLACK -> (fromVertex.getVertexPayload().getStartTime() < toVertex.getVertexPayload().getStartTime())
@@ -123,14 +106,11 @@ public class PostLeadsFinder {
 
     private boolean postProcessVertex(int time, @Nullable Vertex currentVertex /* null for start vertex */,
                                       Vertex discoveredVertex) {
-        discoveredVertex.getVertexPayload().updateTimeOnPop(time);
-
         // post-processing is done only for TREE-kind edges
         assert currentVertex == null
                 || currentVertex.getVertexPayload().edgeKind(discoveredVertex.getId()) == EdgeKind.TREE;
 
-        if (discoveredVertex.getVertexPayload().isDead()
-                && !isExitVertex(discoveredVertex)) {
+        if (discoveredVertex.getVertexPayload().isDead() && !isExitVertex(discoveredVertex)) {
             if (currentVertex != null
                     // NB: the edge may have already been marked dead in "IN" function.
                     // This happens when we traverse a dead-end tree branch that does not end with the finish vertex.
@@ -181,7 +161,8 @@ public class PostLeadsFinder {
 
     /** NB: according to task description the start vertex should *not* be present in the result,
      so we explicitly skip it. */
-    private void filterOutStartNode(List<Vertex> allPostLeads) {
+    private void filterOutStartVertex(List<Vertex> allPostLeads) {
+        assert allPostLeads.size() > 0;
         Vertex first = allPostLeads.remove(0);
         assert isStartVertex(first);
     }

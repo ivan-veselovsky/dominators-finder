@@ -50,14 +50,14 @@ public class VertexPayload {
         return BLACK;
     }
 
-    void updateTimeOnPush(int time) {
+    void setStartTime(int time) {
         Preconditions.checkArgument(time > 0); // 1-based
         Preconditions.checkState(startTime < 0, "Start time already present: " + startTime);
         Preconditions.checkState(finishTime < 0);
         startTime = time;
     }
 
-    void updateTimeOnPop(int time) {
+    void setFinishTime(int time) {
         Preconditions.checkArgument(time > 0); // 1-based
         Preconditions.checkState(startTime > 0);
         Preconditions.checkState(finishTime < 0);
