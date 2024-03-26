@@ -9,6 +9,7 @@ import java.util.List;
 import static edu.postleadsfinder.PostLeadsFinder.asKeys;
 import static org.assertj.core.api.BDDAssertions.then;
 
+// TODO: make these tests parametrized
 class PostLeadsFinderTest {
     @Test
     void single_vertex_graph() {
@@ -758,7 +759,6 @@ n -> a
 
     /**
      * Example when the algorithm does not work, pointed by the task authors:
-     *
      */
     @Test
     void bug_in_algoritrhm_0() {
@@ -773,6 +773,42 @@ n -> a
                     F -> E
                     E -> F
                     A -> E
+                    F -> G 
+                  }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).containsExactly("F", "G");
+    }
+
+    /**
+     * Same example as previous one, but this time
+     * result (incorrect) does not depend on traversal order,
+     * as the graph is symmetric.
+     */
+    @Test
+    void bug_in_algorithm_0_false_result_under_any_traversal_order() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"G\"," +
+                """ 
+                  "graph": "digraph graphname{ 
+                    A -> D
+                    D -> F
+                    F -> D
+                    
+                    A -> E
+                    E -> F
+                    F -> E
+                    
                     F -> G 
                   }"
                 """

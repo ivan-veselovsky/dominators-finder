@@ -39,16 +39,23 @@ of your solution.
 Solution is based on Depth First Search (DFS) algorithm, as per book 
 "Introduction to Algorithms" by T.H. Cormen, Ch.E. Leiserson, R.L. Rivest:    
 1) Build the DFS tree starting from the given Start vertex (_h_). (Exit vertex (_e2_) must 
- be reachable from the Start vertex (_h_), so it appears on the tree. Otherwise we throw an error.)
+ be reachable from the Start vertex (_h_), so it appears on the tree. Otherwise, we throw an error.)
+
 2) Classify all the DFS edges as being of _TREE_, _FORWARD_, _BACKWARD_, or _CROSS_ kind.
-3) Remove loops by removing all _BACKWARD_ edges.
-4) Remove all "dead ends" (vertices with zero out-degree), taking into account that removal 
+
+3) Remove loops by removing all _BACKWARD_ edges. (!!! this is the mistake. In some cases this deleted paths
+that are critical to correct answer.) 
+
+5) Remove all "dead ends" (vertices with zero out-degree), taking into account that removal 
  of some vertices may cause other "dead ends" to appear. When this step is finished, the only "dead end" vertex
- is the Exit vertex. 
-5) Take the remaining graph vertices in _topological sort order_. 
+ is the Exit vertex.
+
+6) Take the remaining graph vertices in _topological sort order_. 
  (This is the descending order of "end processing time" in DFS algorithm).
-6) Calculate in-degree and out-degree for each vertex.  
-7) Traverse the vertices in _topological sorting order_ maintaining _parallel edge count_ integer metric: 
+
+7) Calculate in-degree and out-degree for each vertex.
+
+8) Traverse the vertices in _topological sorting order_ maintaining _parallel edge count_ integer metric: 
  for each vertex reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
  Basing on this metric detect all the post-lead vertices: the post-lead is a vertex where this metric drops to zero.   
 
