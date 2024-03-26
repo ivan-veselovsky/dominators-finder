@@ -756,4 +756,67 @@ n -> a
         then(postLeads).containsExactly("D", "G", "K");
     }
 
+    /**
+     * Example when the algorithm does not work, pointed by the task authors:
+     *
+     */
+    @Test
+    void bug_in_algoritrhm_0() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"G\"," +
+                """ 
+                  "graph": "digraph graphname{ 
+                    A -> D
+                    D -> F
+                    F -> E
+                    E -> F
+                    A -> E
+                    F -> G 
+                  }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).containsExactly("F", "G");
+    }
+
+    /** Example invented by me -- related to incorrect dropping of "back" edge "FD": */
+    @Test
+    void bug_in_algoritrhm_1() {
+        GraphBuilder graphBuilder = new GraphBuilder();
+        graphBuilder.build("{" +
+                "\"h\": \"A\"," +
+                "\"e2\": \"D\"," +
+                """ 
+                  "graph": "digraph graphname{ 
+                    A -> B
+                    A -> C
+                    B -> D
+                    C -> E
+                    E -> B
+                    D -> E
+                    E -> F
+                    F -> D 
+                  }"
+                """
+                + "}");
+        final Graph graph = graphBuilder.getGraph();
+
+        final Vertex startVertex = graphBuilder.startVertex();
+        final Vertex exitVertex = graphBuilder.exitVertex();
+
+        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        List<String> keyList = asKeys(finder.computePostLeads());
+
+        then(keyList).containsExactly("D");
+    }
+
 }
