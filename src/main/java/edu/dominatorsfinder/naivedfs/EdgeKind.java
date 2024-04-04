@@ -1,4 +1,4 @@
-package edu.dominatorsfinder;
+package edu.dominatorsfinder.naivedfs;
 
 public enum EdgeKind {
     TREE,

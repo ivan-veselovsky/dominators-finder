@@ -1,13 +1,14 @@
-package edu.dominatorsfinder;
+package edu.dominatorsfinder.naivedfs;
 
 import com.google.common.base.Preconditions;
+import edu.dominatorsfinder.Vertex;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
-import static edu.dominatorsfinder.DfsPayload.VertexColor.*;
+import static edu.dominatorsfinder.naivedfs.DfsPayload.VertexColor.*;
 
 /**
  * Mutable auxiliary data class attached to a {@link Vertex}.
@@ -24,8 +25,10 @@ public class DfsPayload {
     /** Edges that go to "dead end" branches. */
     private Set<Integer> deadEdges;
 
-    @Getter private int inDegreeWithoutDeadEdges;
-    @Getter private int outDegreeWithoutDeadEdges;
+    @Getter
+    private int inDegreeWithoutDeadEdges;
+    @Getter
+    private int outDegreeWithoutDeadEdges;
 
     public DfsPayload(Vertex<?> vertex) {
         this.vertex = (Vertex)vertex;

@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
+/** Represents vertex Payload for Dijkstras and "Heavy Vertices Bypass" algorithm. */
 @RequiredArgsConstructor
 public class DijPayload {
 

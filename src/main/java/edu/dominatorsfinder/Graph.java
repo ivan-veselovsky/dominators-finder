@@ -1,6 +1,7 @@
 package edu.dominatorsfinder;
 
 import com.google.common.base.Verify;
+import edu.dominatorsfinder.naivedfs.DfsPayload;
 
 import java.util.Arrays;
 import java.util.List;

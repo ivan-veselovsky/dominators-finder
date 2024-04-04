@@ -2,7 +2,6 @@ package edu.dominatorsfinder.naivedfs;
 
 import edu.dominatorsfinder.Graph;
 import edu.dominatorsfinder.Vertex;
-import edu.dominatorsfinder.DfsPayload;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nullable;
