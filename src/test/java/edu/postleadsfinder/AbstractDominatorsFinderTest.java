@@ -14,7 +14,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 public abstract class AbstractDominatorsFinderTest<Payload> {
 
-    protected abstract AlgorithmHelper<Payload> getFactory();
+    protected abstract AbstractFinderFactory<Payload> getFactory();
 
     private static String getCallerMethodName() {
         StackTraceElement e = new Throwable().getStackTrace()[1];

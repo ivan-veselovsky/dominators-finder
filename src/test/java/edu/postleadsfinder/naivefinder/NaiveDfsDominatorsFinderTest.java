@@ -10,10 +10,10 @@ import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 
 public class NaiveDfsDominatorsFinderTest extends AbstractDominatorsFinderTest<DfsPayload> {
 
-    private final AlgorithmHelper<DfsPayload> algorithmHelper = new NaiveDfsHelper();
+    private final AbstractFinderFactory<DfsPayload> algorithmHelper = new NaiveDfsFinderFactory();
 
     @Override
-    protected AlgorithmHelper<DfsPayload> getFactory() {
+    protected AbstractFinderFactory<DfsPayload> getFactory() {
         return algorithmHelper;
     }
 

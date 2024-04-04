@@ -3,7 +3,7 @@ package edu.postleadsfinder.dijkstras;
 import edu.postleadsfinder.*;
 import edu.postleadsfinder.heavyverticesbypass.HeavyVerticesBypassDominatorsFinder;
 
-public class HeavyBypassAlgorithmHelper extends AlgorithmHelper<DijPayload> {
+public class HeavyBypassFinderFactory extends AbstractFinderFactory<DijPayload> {
 
     @Override
     protected GraphBuilder<DijPayload> createGraphBuilder() {

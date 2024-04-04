@@ -1,6 +1,6 @@
 package edu.postleadsfinder;
 
-public abstract class AlgorithmHelper<Payload> {
+public abstract class AbstractFinderFactory<Payload> {
 
     protected abstract GraphBuilder<Payload> createGraphBuilder();
 

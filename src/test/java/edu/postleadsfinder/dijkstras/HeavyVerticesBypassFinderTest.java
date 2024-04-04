@@ -4,10 +4,10 @@ import edu.postleadsfinder.*;
 
 public class HeavyVerticesBypassFinderTest extends AbstractDominatorsFinderTest<DijPayload> {
 
-    private final AlgorithmHelper<DijPayload> algorithmHelper = new HeavyBypassAlgorithmHelper();
+    private final AbstractFinderFactory<DijPayload> algorithmHelper = new HeavyBypassFinderFactory();
 
     @Override
-    protected AlgorithmHelper<DijPayload> getFactory() {
+    protected AbstractFinderFactory<DijPayload> getFactory() {
         return algorithmHelper;
     }
 }

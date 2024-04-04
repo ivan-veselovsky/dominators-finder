@@ -2,7 +2,7 @@ package edu.postleadsfinder;
 
 import edu.postleadsfinder.naivefinder.NaiveDfsDominatorsFinder;
 
-public class NaiveDfsHelper extends AlgorithmHelper<DfsPayload> {
+public class NaiveDfsFinderFactory extends AbstractFinderFactory<DfsPayload> {
 
     @Override
     protected GraphBuilder<DfsPayload> createGraphBuilder() {
@@ -12,7 +12,8 @@ public class NaiveDfsHelper extends AlgorithmHelper<DfsPayload> {
     }
 
     @Override
-    protected IDominatorsFinder<DfsPayload> createFinder(Graph<DfsPayload> graph, Vertex<DfsPayload> startVertex, Vertex<DfsPayload> exitVertex) {
+    protected IDominatorsFinder<DfsPayload> createFinder(Graph<DfsPayload> graph, Vertex<DfsPayload> startVertex,
+                                                         Vertex<DfsPayload> exitVertex) {
         return new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex);
     }
 
