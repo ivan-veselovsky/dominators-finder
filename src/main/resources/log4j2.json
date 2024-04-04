@@ -1,6 +1,6 @@
 {
   "configuration": {
-    "name": "post-leads-finder-application",
+    "name": "dominants-finder-application",
     "status": "ERROR",
     "appenders": {
       "Console": {

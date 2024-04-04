@@ -1,7 +1,7 @@
 #### Task Description
 
-Definition of ‘post-lead’: In a single-entry, single-exit
-control flow graph (CFG), a node _u_ post-leads _v_ if every path
+Definition of ‘dominator’: In a single-entry, single-exit
+control flow graph (CFG), a node _u_ dominators _v_ if every path
 from _v_ to the exit includes _u_.
 
 Implement a Java http server with a REST API that gets as an
@@ -11,7 +11,7 @@ graph.
 𝑒1: the entry node of the graph
 𝑒2: the exit node of the graph
 ℎ: a node in the graph
-The server outputs all the nodes that post-lead ℎ in the
+The server outputs all the nodes that dominator ℎ in the
 graph.
 
 #### For example:
@@ -57,7 +57,7 @@ that are critical to correct answer.)
 
 8) Traverse the vertices in _topological sorting order_ maintaining _parallel edge count_ integer metric: 
  for each vertex reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
- Basing on this metric detect all the post-lead vertices: the post-lead is a vertex where this metric drops to one.   
+ Basing on this metric detect all the dominator vertices: the dominator is a vertex where this metric drops to one.   
 
 ##### Complexity
 
@@ -69,16 +69,16 @@ and `O(V + E)` memory, as we store some temporary data for each vertex and edge.
 Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`.   
 
     mvn clean install
-    java -jar ./target/post-leads-finder-1.0-SNAPSHOT-exec.jar
+    java -jar ./target/dominators-finder-1.0-SNAPSHOT-exec.jar
     curl http://localhost:10000/
 
 ##### Notes
 
 - Known notion of graph _articulation points_ cannot be directly applied here, 
- because the _post-leads_ become articulation points only after loops removal.
+ because the _dominators_ become articulation points only after loops removal.
 - The algorithm described above can naturally be implemented in several graph traversals, but
  in fact it can be implemented in just one DFS traversal, as done here.
-- Start vertex is always a _post-lead_ of itself, but the task description suggests that it shall not be
+- Start vertex is always a _dominator_ of itself, but the task description suggests that it shall not be
  present in the returned result, so we explicitly skip the Start vertex in the output.
 - Output is *not* a valid JSON, its just `{A, B, C}` string of type `text/plain`, as task description suggests.
 - By default server starts on non-standard port `10000`, as task description suggests.
@@ -88,7 +88,5 @@ Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`.
 
 #### TODO
 
- - rename postlead -> dominators , "postlead" was initially intentionally confusing.
  - add ref to Tomas Lengauer and Robert Tarjan : https://www.cs.princeton.edu/courses/archive/spr03/cs423/download/dominators.pdf
  - replace Binary Search tree with vEB tree.
- - 

@@ -5,14 +5,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>edu.example</groupId>
-    <artifactId>post-leads-finder</artifactId>
+    <artifactId>dominators-finder</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <spring-boot.version>2.7.2</spring-boot.version>
-        <start-class>edu.postleadsfinder.service.Application</start-class>
+        <start-class>edu.dominatorsfinder.service.Application</start-class>
     </properties>
 
     <dependencies>
@@ -122,7 +122,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <version>${spring-boot.version}</version>
                 <configuration>
-                    <mainClass>edu.postleadsfinder.service.Application</mainClass>
+                    <mainClass>edu.dominatorsfinder.service.Application</mainClass>
                     <layout>ZIP</layout>
                 </configuration>
                 <executions>

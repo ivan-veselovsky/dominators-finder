@@ -1,6 +1,6 @@
 {
   "configuration": {
-    "name": "post-leads-finder-test",
+    "name": "dominants-finder-test",
     "status": "ERROR",
     "appenders": {
       "Console": {
