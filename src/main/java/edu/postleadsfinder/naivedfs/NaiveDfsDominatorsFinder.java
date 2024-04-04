@@ -15,7 +15,7 @@ public class NaiveDfsDominatorsFinder extends AbstractDominatorsFinder<DfsPayloa
     /** When true, implementation makes mode diagnostic checks. */
     private static final boolean DEBUG_MODE = Util.areAssertionsEnabled();
 
-    public NaiveDfsDominatorsFinder(Graph<DfsPayload> graph, Vertex<DfsPayload> startVertex, Vertex<DfsPayload> exitVertex) {
+    NaiveDfsDominatorsFinder(Graph<DfsPayload> graph, Vertex<DfsPayload> startVertex, Vertex<DfsPayload> exitVertex) {
         super(graph, startVertex, exitVertex);
     }
 

@@ -1,6 +1,7 @@
-package edu.postleadsfinder.dijkstras;
+package edu.postleadsfinder.heavyverticesbypass;
 
 import edu.postleadsfinder.*;
+import edu.postleadsfinder.dijkstras.DijPayload;
 import edu.postleadsfinder.heavyverticesbypass.HeavyBypassFinderFactory;
 
 public class HeavyVerticesBypassFinderTest extends AbstractDominatorsFinderTest<DijPayload> {

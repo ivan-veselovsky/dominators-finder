@@ -15,7 +15,7 @@ import static com.google.common.collect.Iterables.getLast;
 
 public class HeavyVerticesBypassDominatorsFinder extends AbstractDominatorsFinder<DijPayload> implements IDominatorsFinder<DijPayload> {
 
-    public HeavyVerticesBypassDominatorsFinder(Graph<DijPayload> graph, Vertex<DijPayload> startVertex, Vertex<DijPayload> exitVertex) {
+    HeavyVerticesBypassDominatorsFinder(Graph<DijPayload> graph, Vertex<DijPayload> startVertex, Vertex<DijPayload> exitVertex) {
         super(graph, startVertex, exitVertex);
     }
 
