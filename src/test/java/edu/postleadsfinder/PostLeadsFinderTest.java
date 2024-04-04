@@ -26,7 +26,7 @@ public class PostLeadsFinderTest {
         return (IDominatorsFinder)new PostLeadsFinder(graph, startVertex, exitVertex);
     }
 
-    @ParameterizedTest(name = "{0}, {2} -> {3}")
+    @ParameterizedTest(name = "{0}, {1} -> {2}")
     @MethodSource("testCases")
     protected final <P> void doTest(TestGraph testGraph,
                                     String startVertexKey, String exitVertexKey, List<String> expectedDominators) {
@@ -128,9 +128,14 @@ public class PostLeadsFinderTest {
                     """);
     }
 
+//    static TestGraph () {
+//        return new TestGraph(getCallerMethodName(), """
+//                    """);
+//    }
+
     private static String getCallerMethodName() {
         StackTraceElement e = new Throwable().getStackTrace()[1];
-        return e.toString();
+        return e.getMethodName();
     }
 
 //    @Test
