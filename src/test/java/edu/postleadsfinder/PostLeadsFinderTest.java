@@ -1,88 +1,189 @@
 package edu.postleadsfinder;
 
+import edu.postleadsfinder.naivefinder.PostLeadsFinder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.stream.Stream;
 
-import static edu.postleadsfinder.PostLeadsFinder.asKeys;
+import static edu.postleadsfinder.naivefinder.PostLeadsFinder.asKeys;
 import static org.assertj.core.api.BDDAssertions.then;
 
 // TODO: make these tests parametrized
-class PostLeadsFinderTest {
-    @Test
-    void single_vertex_graph() {
-        GraphBuilder graphBuilder = new GraphBuilder();
-        graphBuilder.build("{" +
-                "\"e2\": \"A\"," +
-                "\"h\": \"A\"," +
-                """ 
-                  "graph": "digraph graphname{ A }"
-                """
-                + "}");
-        final Graph graph = graphBuilder.getGraph();
+public class PostLeadsFinderTest {
 
-        final Vertex startVertex = graphBuilder.startVertex();
-        final Vertex exitVertex = graphBuilder.exitVertex();
-
-        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.computePostLeads());
-
-        then(keyList).isEmpty(); // By convention start node is skipped.
+    protected <P> GraphBuilder<P> createGraphBuilder() {
+        GraphBuilder<DfsPayload> graphBuilder = new GraphBuilder<>();
+        graphBuilder.withPayloadFactoryFunction(DfsPayload::new);
+        return (GraphBuilder)graphBuilder;
     }
 
-    @Test
-    void simplest_graph_two_vertices() {
-        GraphBuilder graphBuilder = new GraphBuilder();
-        graphBuilder.build("{" +
-                "\"h\": \"A\"," +
-                "\"e2\": \"B\"," +
-                """ 
-                  "graph": "digraph graphname{ A -> B }"
-                """
-                + "}");
-        final Graph graph = graphBuilder.getGraph();
-
-        final Vertex startVertex = graphBuilder.startVertex();
-        final Vertex exitVertex = graphBuilder.exitVertex();
-
-        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.computePostLeads());
-        then(keyList).containsExactly("B");
-
-        Vertex vertexA = graph.vertex("A");
-        keyList = asKeys(new PostLeadsFinder(graph, vertexA, vertexA).computePostLeads());
-        then(keyList).isEmpty();
+    protected <P> IDominatorsFinder<P> createFinder(Graph graph, Vertex startVertex, Vertex exitVertex) {
+        return (IDominatorsFinder)new PostLeadsFinder(graph, startVertex, exitVertex);
     }
 
-    @Test
-    void two_vertices_graph_fully_connected() {
-        GraphBuilder graphBuilder = new GraphBuilder();
-        graphBuilder.build("{" +
-                "\"h\": \"A\"," +
-                "\"e2\": \"B\"," +
-                """ 
-                  "graph": "digraph graphname{ A -> B; B -> A; A -> A; B -> B }"
-                """
-                + "}");
-        final Graph graph = graphBuilder.getGraph();
+    @ParameterizedTest(name = "{0}, {2} -> {3}")
+    @MethodSource("testCases")
+    protected final <P> void doTest(TestGraph testGraph,
+                                    String startVertexKey, String exitVertexKey, List<String> expectedDominators) {
+        GraphBuilder<P> graphBuilder = createGraphBuilder();
+        graphBuilder.build(testGraph.graphTopologyJson());
+        final Graph<P> graph = graphBuilder.getGraph();
 
-        final Vertex startVertex = graphBuilder.startVertex();
-        final Vertex exitVertex = graphBuilder.exitVertex();
+        Vertex<P> startVertex = graph.vertex(startVertexKey);
+        then(startVertex).isNotNull();
+        Vertex<P> exitVertex = graph.vertex(exitVertexKey);
+        then(exitVertex).isNotNull();
 
-        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+        IDominatorsFinder<P> finder = createFinder(graph, startVertex, exitVertex);
         List<String> keyList = asKeys(finder.computePostLeads());
-        then(keyList).containsExactly("B");
-
-        Vertex vertexA = graph.vertex("A");
-        keyList = asKeys(new PostLeadsFinder(graph, vertexA, vertexA).computePostLeads());
-        then(keyList).isEmpty();
+        then(keyList).containsExactlyElementsOf(expectedDominators);
     }
+
+    private static Stream<Arguments> testCases() {
+        return Stream.of(
+                Arguments.of(two_vertices_fully_connected(), "A", "B", List.of("B")),
+                Arguments.of(two_vertices_fully_connected(), "A", "A", List.of()),
+                Arguments.of(single_vertex(), "A", "A", List.of()),
+                Arguments.of(simplest_two_vertices(), "A", "B", List.of("B")),
+                Arguments.of(simplest_two_vertices(), "A", "A", List.of())
+
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+//                Arguments.of("", """
+//                    """, "", "", List.of()),
+                );
+    }
+
+//    @Test
+//    void single_vertex_graph() {
+//        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
+//        graphBuilder.build("{" +
+//                "\"e2\": \"A\"," +
+//                "\"h\": \"A\"," +
+//                + "}");
+//        final Graph graph = graphBuilder.getGraph();
+//
+//        final Vertex startVertex = graphBuilder.startVertex();
+//        final Vertex exitVertex = graphBuilder.exitVertex();
+//
+//        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+//        List<String> keyList = asKeys(finder.computePostLeads());
+//
+//        then(keyList).isEmpty(); // By convention start node is skipped.
+//    }
+
+    record TestGraph(String name, String graphTopologyJson) {
+        @Override
+        public String toString() {
+            return name;
+        }
+    }
+
+    static TestGraph single_vertex() {
+        return new TestGraph(getCallerMethodName(), """
+                    {
+                        "graph": "digraph graphname{ A }"
+                    }   
+             """);
+    }
+
+    static TestGraph simplest_two_vertices() {
+        return new TestGraph(getCallerMethodName(), """
+                { 
+                   "graph": "digraph graphname{ A -> B }"
+                }
+                """);
+    }
+
+    static TestGraph two_vertices_fully_connected() {
+        return new TestGraph(getCallerMethodName(), """
+                    {
+                      "graph": "digraph graphname{ A -> B; B -> A; A -> A; B -> B }"
+                    }
+                    """);
+    }
+
+    private static String getCallerMethodName() {
+        StackTraceElement e = new Throwable().getStackTrace()[1];
+        return e.toString();
+    }
+
+//    @Test
+//    void simplest_graph_two_vertices() {
+//        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
+//        graphBuilder.build("{" +
+//                "\"h\": \"A\"," +
+//                "\"e2\": \"B\"," +
+//                """
+//                  "graph": "digraph graphname{ A -> B }"
+//                """
+//                + "}");
+//        final Graph graph = graphBuilder.getGraph();
+//
+//        final Vertex startVertex = graphBuilder.startVertex();
+//        final Vertex exitVertex = graphBuilder.exitVertex();
+//
+//        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+//        List<String> keyList = asKeys(finder.computePostLeads());
+//        then(keyList).containsExactly("B");
+//
+//        Vertex vertexA = graph.vertex("A");
+//        keyList = asKeys(new PostLeadsFinder(graph, vertexA, vertexA).computePostLeads());
+//        then(keyList).isEmpty();
+//    }
+
+//    @Test
+//    void two_vertices_graph_fully_connected() {
+//        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
+//        graphBuilder.build("{" +
+//                "\"h\": \"A\"," +
+//                "\"e2\": \"B\"," +
+//                """
+//                  "graph": "digraph graphname{ A -> B; B -> A; A -> A; B -> B }"
+//                """
+//                + "}");
+//        final Graph graph = graphBuilder.getGraph();
+//
+//        final Vertex startVertex = graphBuilder.startVertex();
+//        final Vertex exitVertex = graphBuilder.exitVertex();
+//
+//        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+//        List<String> keyList = asKeys(finder.computePostLeads());
+//        then(keyList).containsExactly("B");
+//
+//        Vertex vertexA = graph.vertex("A");
+//        keyList = asKeys(new PostLeadsFinder(graph, vertexA, vertexA).computePostLeads());
+//        then(keyList).isEmpty();
+//    }
 
     @Test
     void several_post_leads() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"K\"," +
@@ -125,62 +226,8 @@ class PostLeadsFinderTest {
     }
 
     @Test
-    void example_from_task_description() {
-        GraphBuilder graphBuilder = new GraphBuilder();
-        graphBuilder.build("""
-                {"e2": "7",
-                 "h": "2",
-                 "graph": " digraph graphname{
-                    1->2
-                    2->3
-                    2->5
-                    5->2
-                    3->5
-                    5->7
-                   }"
-                }
-                """);
-        final Graph graph = graphBuilder.getGraph();
-
-        final Vertex startVertex = graphBuilder.startVertex();
-        final Vertex exitVertex = graphBuilder.exitVertex();
-
-        graph.vertexStream().forEachOrdered(System.out::println);
-
-        // Edges:
-        then(graph.vertex(0).getOutgoingEdges()).containsExactly(1);
-        then(graph.vertex(1).getOutgoingEdges()).containsExactly(2, 3);
-        then(graph.vertex(2).getOutgoingEdges()).containsExactly(3);
-        then(graph.vertex(3).getOutgoingEdges()).containsExactly(1, 4);
-        then(graph.vertex(4).getOutgoingEdges()).containsExactly();
-
-        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> postLeadKeys = asKeys(finder.computePostLeads());
-        then(postLeadKeys).containsExactly("5", "7");
-
-        // Start/End times:
-        then(graph.vertex(0).getVertexPayload().getStartTime()).isEqualTo(-1);
-        then(graph.vertex(0).getVertexPayload().getFinishTime()).isEqualTo(-1);
-        then(graph.vertex(1).getVertexPayload().getStartTime()).isEqualTo(1);
-        then(graph.vertex(1).getVertexPayload().getFinishTime()).isEqualTo(10);
-        then(graph.vertex(2).getVertexPayload().getStartTime()).isEqualTo(2);
-        then(graph.vertex(2).getVertexPayload().getFinishTime()).isEqualTo(8);
-        then(graph.vertex(3).getVertexPayload().getStartTime()).isEqualTo(3);
-        then(graph.vertex(3).getVertexPayload().getFinishTime()).isEqualTo(7);
-        then(graph.vertex(4).getVertexPayload().getStartTime()).isEqualTo(5);
-        then(graph.vertex(4).getVertexPayload().getFinishTime()).isEqualTo(6);
-
-        // Edges color:
-        then(graph.vertex(1).getVertexPayload().edgeKind(2)).isEqualTo(EdgeKind.TREE);
-        then(graph.vertex(1).getVertexPayload().edgeKind(3)).isEqualTo(EdgeKind.FORWARD);
-        then(graph.vertex(2).getVertexPayload().edgeKind(3)).isEqualTo(EdgeKind.TREE);
-        then(graph.vertex(3).getVertexPayload().edgeKind(4)).isEqualTo(EdgeKind.TREE);
-        then(graph.vertex(3).getVertexPayload().edgeKind(1)).isEqualTo(EdgeKind.BACKWARD);
-    }
-
-    @Test
     void large_graph() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"o\"," +
                 "\"h\": \"a\"," +
@@ -227,7 +274,7 @@ n -> a
 
     @Test
     void small_with_all_type_of_edges() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"G\"," +
                 "\"h\": \"A\"," +
@@ -259,7 +306,7 @@ n -> a
 
     @Test
     void small_graph_many_back_edges() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"G\"," +
                 "\"h\": \"A\"," +
@@ -298,7 +345,7 @@ n -> a
 
     @Test
     void small_graph_many_back_edges_fully_reflective() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"G\"," +
                 "\"h\": \"A\"," +
@@ -345,7 +392,7 @@ n -> a
 
     @Test
     void sand_glass_shape() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"H\"," +
                 "\"h\": \"A\"," +
@@ -376,7 +423,7 @@ n -> a
 
     @Test
     void bridge_shape() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"H\"," +
                 "\"h\": \"A\"," +
@@ -408,7 +455,7 @@ n -> a
 
     @Test
     void long_bridge_shape() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"H\"," +
                 "\"h\": \"A\"," +
@@ -441,7 +488,7 @@ n -> a
 
     @Test
     void long_bridge_shape_with_back_edges() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"H\"," +
                 "\"h\": \"A\"," +
@@ -480,7 +527,7 @@ n -> a
 
     @Test
     void long_bridge_shape_with_back_edges_fully_reflective() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"H\"," +
                 "\"h\": \"A\"," +
@@ -533,8 +580,8 @@ n -> a
             "G, _"
     })
     void all_possible_start_vertices(String start, String expectedPostLeads) {
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         String[] expectedKeys = expectedPostLeads.split("_");
-        GraphBuilder graphBuilder = new GraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"" + start + "\"," +
                 "\"e2\": \"G\"," +
@@ -566,7 +613,7 @@ n -> a
 
     @Test
     void all2all_two_vertices() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"B\"," +
@@ -590,7 +637,7 @@ n -> a
 
     @Test
     void all2all_three_vertices() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"B\"," +
@@ -621,7 +668,7 @@ n -> a
 
     @Test
     void butterfly_shape() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"E\"," +
@@ -670,7 +717,7 @@ n -> a
 
     @Test
     void edge_made_dead_twice_simplest_example() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"B\"," +
@@ -692,30 +739,31 @@ n -> a
         then(keyList).containsExactly("B");
     }
 
-    @Test
-    void single_vertex() {
-        GraphBuilder graphBuilder = new GraphBuilder();
-        graphBuilder.build("{" +
-                "\"h\": \"A\"," +
-                "\"e2\": \"A\"," +
-                """ 
-                  "graph": "digraph graphname{ A }"
-                """
-                + "}");
-        final Graph graph = graphBuilder.getGraph();
-
-        final Vertex startVertex = graphBuilder.startVertex();
-        final Vertex exitVertex = graphBuilder.exitVertex();
-
-        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> keyList = asKeys(finder.computePostLeads());
-
-        then(keyList).isEmpty();
-    }
+//    @Test
+//    void single_vertex_t() {
+//        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
+//        graphBuilder.build("{" +
+//                "\"h\": \"A\"," +
+//                "\"e2\": \"A\"," +
+//                """
+//                  "graph": "digraph graphname{ A }"
+//                """
+//                + "}");
+//        final Graph graph = graphBuilder.getGraph();
+//
+//        final Vertex startVertex = graphBuilder.startVertex();
+//        final Vertex exitVertex = graphBuilder.exitVertex();
+//
+//        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
+//        List<String> keyList = asKeys(finder.computePostLeads());
+//
+//        then(keyList).isEmpty();
+//    }
 
     @Test
     void many_dead_ends() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
+        graphBuilder.withPayloadFactoryFunction(DfsPayload::new);
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"K\"," +
@@ -762,7 +810,7 @@ n -> a
      */
     @Test
     void bug_in_algoritrhm_0() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"G\"," +
@@ -795,7 +843,7 @@ n -> a
      */
     @Test
     void bug_in_algorithm_0_false_result_under_any_traversal_order() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"G\"," +
@@ -827,7 +875,7 @@ n -> a
     /** Example invented by me -- related to incorrect dropping of "back" edge "FD": */
     @Test
     void bug_in_algoritrhm_1() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"D\"," +

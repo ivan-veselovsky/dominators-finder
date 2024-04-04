@@ -57,7 +57,7 @@ that are critical to correct answer.)
 
 8) Traverse the vertices in _topological sorting order_ maintaining _parallel edge count_ integer metric: 
  for each vertex reduce the metric by the vertex in-degree, then increase it by the vertex out-degree. 
- Basing on this metric detect all the post-lead vertices: the post-lead is a vertex where this metric drops to zero.   
+ Basing on this metric detect all the post-lead vertices: the post-lead is a vertex where this metric drops to one.   
 
 ##### Complexity
 
@@ -86,6 +86,9 @@ Solution was tested on `Ubuntu 20.04` with `Java 18`, `Apache Maven 3.8.6`.
  and the service fails to parse it.
 
 
-#### Further Improvements
+#### TODO
 
-- Make DFS traverse iterative. Now it is recursive, what can cause a stack overflow on large graphs.
+ - rename postlead -> dominators , "postlead" was initially intentionally confusing.
+ - add ref to Tomas Lengauer and Robert Tarjan : https://www.cs.princeton.edu/courses/archive/spr03/cs423/download/dominators.pdf
+ - replace Binary Search tree with vEB tree.
+ - 

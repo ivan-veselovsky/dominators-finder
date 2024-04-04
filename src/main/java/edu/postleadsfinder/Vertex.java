@@ -9,36 +9,33 @@ import java.util.function.Function;
 /**
  * Represents a vertex of Graph.
  */
-public class Vertex {
+@Getter
+public class Vertex <P> {
     /**
      * Integer {@code id} of the vertex.
      * The {@code id} is unique withing the Graph.
      * The ids are assigned sequentially, and are zero-based.
      * So, the smallest id is 0, and largest id is N-1, where N is the number of nodes in the Graph.
      */
-    @Getter
     private final int id;
     /**
      * String {@code key} of the Vertex as specified in the dot-format input.
      * The {@code key} is unique withing the Graph.
      */
-    @Getter
     private final String key;
     /**
      * Outgoing edge list, with each edge being identified by its target vertex {@code id}.
      * The {@code id}s in the List are unique and sorted in ascending order.
      */
-    @Getter
     private final List<Integer> outgoingEdges;
-    @Getter
-    private final VertexPayload vertexPayload;
+    private final P payload;
 
-    Vertex(int id, String key, int[] outgoingEdges, Function<Vertex, VertexPayload> payloadFunction) {
+    Vertex(int id, String key, int[] outgoingEdges, Function<Vertex<P>, P> payloadFunction) {
         this.id = id;
         this.key = key;
         assert areSorted(outgoingEdges);
         this.outgoingEdges = Arrays.stream(outgoingEdges).boxed().toList();
-        this.vertexPayload = payloadFunction.apply(this);
+        this.payload = payloadFunction.apply(this);
     }
 
     private boolean areSorted(int[] indexes) {

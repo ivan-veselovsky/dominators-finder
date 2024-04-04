@@ -1,14 +1,21 @@
 package edu.postleadsfinder;
 
+import edu.postleadsfinder.naivefinder.PostLeadsFinder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.*;
 
 class PostLeadsFinderNegativeCasesTest {
 
+    protected GraphBuilder createGraphBuilder() {
+        GraphBuilder<DfsPayload> graphBuilder = new GraphBuilder<>();
+        graphBuilder.withPayloadFactoryFunction(DfsPayload::new);
+        return graphBuilder;
+    }
+
     @Test
     void small_with_all_type_of_edges_target_node_unreachable_not_simply_connected() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"Y\"," +
                 "\"h\": \"A\"," +
@@ -58,7 +65,7 @@ class PostLeadsFinderNegativeCasesTest {
 
     @Test
     void small_with_all_type_of_edges_target_node_unreachable_simply_connected() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"e2\": \"Y\"," +
                 "\"h\": \"A\"," +
@@ -112,7 +119,7 @@ class PostLeadsFinderNegativeCasesTest {
 
     @Test
     void unreachable_finish() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"B\"," +
@@ -132,7 +139,7 @@ class PostLeadsFinderNegativeCasesTest {
 
     @Test
     void unreachable_finish_not_simply_connected() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"B\"," +
@@ -155,7 +162,7 @@ class PostLeadsFinderNegativeCasesTest {
 
     @Test
     void unreachable_finish_two_loops_not_simply_connected() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder graphBuilder = createGraphBuilder();
         graphBuilder.build("{" +
                 "\"h\": \"A\"," +
                 "\"e2\": \"C\"," +

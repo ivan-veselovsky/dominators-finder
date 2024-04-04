@@ -1,5 +1,8 @@
-package edu.postleadsfinder;
+package edu.postleadsfinder.naivefinder;
 
+import edu.postleadsfinder.Graph;
+import edu.postleadsfinder.Vertex;
+import edu.postleadsfinder.DfsPayload;
 import lombok.RequiredArgsConstructor;
 
 import javax.annotation.Nullable;
@@ -23,10 +26,10 @@ public class DepthFirstSearch {
          * @return for forward direction (down the stack): {@code true} if we should traverse further, of {@code false} otherwise.
          * for backward direction (up the stack) the return value is ignored.
          */
-        boolean apply(int time, @Nullable Vertex fromVertex, Vertex toVertex);
+        boolean apply(int time, @Nullable Vertex<DfsPayload> fromVertex, Vertex<DfsPayload> toVertex);
     }
 
-    private final Graph graph;
+    private final Graph<DfsPayload> graph;
     private final EdgeFunction preProcessFunction;
     private final EdgeFunction postProcessFunction;
 
@@ -35,17 +38,17 @@ public class DepthFirstSearch {
      * @param vertex The Vertex to start from.
      * @return The "time" counter value.
      */
-    public int dfsFrom(final Vertex vertex) {
+    public int dfsFrom(final Vertex<DfsPayload> vertex) {
         return dfsRecursive(0, null, vertex);
     }
 
-    private int dfsRecursive(int time, final @Nullable Vertex currentVertex, final Vertex discoveredVertex) {
+    private int dfsRecursive(int time, final @Nullable Vertex<DfsPayload> currentVertex, final Vertex<DfsPayload> discoveredVertex) {
         time++;
         // NB: notice "&&" below: time is not updated (vertex stays white) if preProcessFunction says we should not visit it:
         if (preProcessFunction.apply(time, currentVertex, discoveredVertex)
                 && preUpdateTime(time, currentVertex, discoveredVertex)) {
 
-            for (Vertex outVertex: graph.outgoingVertices(discoveredVertex)) {
+            for (Vertex<DfsPayload> outVertex: graph.outgoingVertices(discoveredVertex)) {
                 time = dfsRecursive(time, discoveredVertex, outVertex);
             }
 
@@ -56,9 +59,9 @@ public class DepthFirstSearch {
         return time;
     }
 
-    public boolean preUpdateTime(int time, @Nullable Vertex currentVertex, Vertex discoveredVertex) {
-        if (discoveredVertex.getVertexPayload().getColor() == VertexPayload.VertexColor.WHITE) {
-            discoveredVertex.getVertexPayload().setStartTime(time);
+    public boolean preUpdateTime(int time, @Nullable Vertex<DfsPayload> currentVertex, Vertex<DfsPayload> discoveredVertex) {
+        if (discoveredVertex.getPayload().getColor() == DfsPayload.VertexColor.WHITE) {
+            discoveredVertex.getPayload().setDfsStartTime(time);
 
             return true; // visit it!
         }
@@ -66,8 +69,8 @@ public class DepthFirstSearch {
         return false; // GREY or BLACK: already visited or being processed, do not visit again.
     }
 
-    public void postUpdateTime(int time, @Nullable Vertex currentVertex, Vertex discoveredVertex) {
-        discoveredVertex.getVertexPayload().setFinishTime(time);
+    public void postUpdateTime(int time, @Nullable Vertex<DfsPayload> currentVertex, Vertex<DfsPayload> discoveredVertex) {
+        discoveredVertex.getPayload().setDfsFinishTime(time);
     }
 
 }

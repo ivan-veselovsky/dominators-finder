@@ -8,13 +8,14 @@ class GraphBuilderTest {
 
     @Test
     void test_build_example_graph() {
-        GraphBuilder graphBuilder = new GraphBuilder();
+        GraphBuilder<DfsPayload> graphBuilder = new GraphBuilder<>();
+        graphBuilder.withPayloadFactoryFunction(DfsPayload::new);
         graphBuilder.build("{\"e1\": \"1\"," +
                 "\"e2\": \"7\"," +
                 "\"h\":\"2\"," +
                 "\"graph\": \" digraph graphname{\n1->2\n2->3\n2->5\n5->2\n3->5\n5->7}\"" +
                 "}");
-        Graph graph = graphBuilder.getGraph();
+        Graph<DfsPayload> graph = graphBuilder.getGraph();
 
         then(graphBuilder.startVertex().getId()).isEqualTo(1);
         then(graphBuilder.exitVertex().getId()).isEqualTo(4);
