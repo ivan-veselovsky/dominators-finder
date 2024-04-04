@@ -51,17 +51,4 @@ public class Vertex <P> {
     public String toString() {
         return key;
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (!(obj instanceof Vertex)) {
-            return false;
-        }
-        return id == ((Vertex)obj).id;
-    }
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
 }
