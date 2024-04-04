@@ -2,6 +2,7 @@ package edu.postleadsfinder.service;
 
 import edu.postleadsfinder.*;
 import edu.postleadsfinder.dijkstras.DijPayload;
+import edu.postleadsfinder.heavyverticesbypass.HeavyBypassFinderFactory;
 import edu.postleadsfinder.heavyverticesbypass.HeavyVerticesBypassDominatorsFinder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +21,8 @@ import static edu.postleadsfinder.Util.asKeys;
 @Log4j2
 public class GraphPostLeadsFinderRestController {
 
+	private final AbstractFinderFactory<?> finderFactory = new HeavyBypassFinderFactory();
+
 	@GetMapping("/")
 	public String index() {
 		return "Welcome to graph-post-leads-finder! <br>" +
@@ -32,15 +35,14 @@ public class GraphPostLeadsFinderRestController {
 		log.info(">>> Request: [{}]", inputJson);
 		try {
 			// NB: here we use "bypass heavy vertices" algo as it is correct and fast:
-			GraphBuilder<DijPayload> graphBuilder = new GraphBuilder<>();
-			graphBuilder.withPayloadFactoryFunction(DijPayload::new);
+			GraphBuilder<?> graphBuilder = finderFactory.createGraphBuilder();
 			graphBuilder.build(inputJson);
 
-			final Graph<DijPayload> graph = graphBuilder.getGraph();
-			final Vertex<DijPayload> startVertex = graphBuilder.startVertex();
-			final Vertex<DijPayload> exitVertex = graphBuilder.exitVertex();
+			final Graph<?> graph = graphBuilder.getGraph();
+			final Vertex<?> startVertex = graphBuilder.startVertex();
+			final Vertex<?> exitVertex = graphBuilder.exitVertex();
 
-			IDominatorsFinder<DijPayload> finder = new HeavyVerticesBypassDominatorsFinder(graph, startVertex, exitVertex);
+			IDominatorsFinder<?> finder = finderFactory.createFinder((Graph)graph, (Vertex)startVertex, (Vertex)exitVertex);
 			List<String> postLeadKeys = asKeys(finder.computeDominators());
 			String response = formatResponseText(postLeadKeys);
 

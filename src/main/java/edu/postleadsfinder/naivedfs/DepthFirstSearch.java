@@ -1,4 +1,4 @@
-package edu.postleadsfinder.naivefinder;
+package edu.postleadsfinder.naivedfs;
 
 import edu.postleadsfinder.Graph;
 import edu.postleadsfinder.Vertex;

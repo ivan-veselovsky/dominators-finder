@@ -1,4 +1,4 @@
-package edu.postleadsfinder.naivefinder;
+package edu.postleadsfinder.naivedfs;
 
 import edu.postleadsfinder.*;
 import lombok.extern.log4j.Log4j2;

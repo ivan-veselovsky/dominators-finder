@@ -1,19 +1,19 @@
-package edu.postleadsfinder.dijkstras;
+package edu.postleadsfinder.heavyverticesbypass;
 
 import edu.postleadsfinder.*;
-import edu.postleadsfinder.heavyverticesbypass.HeavyVerticesBypassDominatorsFinder;
+import edu.postleadsfinder.dijkstras.DijPayload;
 
 public class HeavyBypassFinderFactory extends AbstractFinderFactory<DijPayload> {
 
     @Override
-    protected GraphBuilder<DijPayload> createGraphBuilder() {
+    public GraphBuilder<DijPayload> createGraphBuilder() {
         GraphBuilder<DijPayload> graphBuilder = new GraphBuilder<>();
         graphBuilder.withPayloadFactoryFunction(DijPayload::new);
         return graphBuilder;
     }
 
     @Override
-    protected IDominatorsFinder<DijPayload> createFinder(Graph<DijPayload> graph,
+    public IDominatorsFinder<DijPayload> createFinder(Graph<DijPayload> graph,
                                                          Vertex<DijPayload> startVertex, Vertex<DijPayload> exitVertex) {
         return new HeavyVerticesBypassDominatorsFinder(graph, startVertex, exitVertex);
     }

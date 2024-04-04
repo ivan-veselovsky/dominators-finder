@@ -1,18 +1,18 @@
-package edu.postleadsfinder;
+package edu.postleadsfinder.naivedfs;
 
-import edu.postleadsfinder.naivefinder.NaiveDfsDominatorsFinder;
+import edu.postleadsfinder.*;
 
 public class NaiveDfsFinderFactory extends AbstractFinderFactory<DfsPayload> {
 
     @Override
-    protected GraphBuilder<DfsPayload> createGraphBuilder() {
+    public GraphBuilder<DfsPayload> createGraphBuilder() {
         GraphBuilder<DfsPayload> graphBuilder = new GraphBuilder<>();
         graphBuilder.withPayloadFactoryFunction(DfsPayload::new);
         return graphBuilder;
     }
 
     @Override
-    protected IDominatorsFinder<DfsPayload> createFinder(Graph<DfsPayload> graph, Vertex<DfsPayload> startVertex,
+    public IDominatorsFinder<DfsPayload> createFinder(Graph<DfsPayload> graph, Vertex<DfsPayload> startVertex,
                                                          Vertex<DfsPayload> exitVertex) {
         return new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex);
     }

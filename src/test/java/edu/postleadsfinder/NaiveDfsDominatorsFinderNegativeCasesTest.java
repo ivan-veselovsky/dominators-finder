@@ -1,6 +1,6 @@
 package edu.postleadsfinder;
 
-import edu.postleadsfinder.naivefinder.NaiveDfsDominatorsFinder;
+import edu.postleadsfinder.naivedfs.NaiveDfsDominatorsFinder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.*;
