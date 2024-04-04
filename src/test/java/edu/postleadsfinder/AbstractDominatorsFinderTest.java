@@ -8,6 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static edu.postleadsfinder.TestUtil.getCallerMethodName;
 import static edu.postleadsfinder.Util.asKeys;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -15,11 +16,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 public abstract class AbstractDominatorsFinderTest<Payload> {
 
     protected abstract AbstractFinderFactory<Payload> getFactory();
-
-    private static String getCallerMethodName() {
-        StackTraceElement e = new Throwable().getStackTrace()[1];
-        return e.getMethodName();
-    }
 
     @ParameterizedTest(name = "{0}, {1} -> {2}")
     @MethodSource("testCases")
