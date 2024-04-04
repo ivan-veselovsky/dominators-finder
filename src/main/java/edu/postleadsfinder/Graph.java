@@ -64,10 +64,5 @@ public class Graph <P> {
         vertexStream().forEach(v -> consumer.accept(v.getPayload()));
     }
 
-//    /** Utility method. Can be used before next traversal to clear the "color" of Vertices,
-//     * while preserving other mutable payload data. */
-//    public void clearDfsTime() {
-//        vertexStream().forEach(v -> v.getVertexPayload().clearDfsTime());
-//    }
 
 }

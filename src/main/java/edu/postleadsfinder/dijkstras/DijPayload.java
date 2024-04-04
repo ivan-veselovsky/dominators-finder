@@ -17,6 +17,9 @@ public class DijPayload {
     @Getter
     private Integer parentVertexId;
 
+    @Getter @Setter
+    private int weight = 1; // NB: this field is not cleared in clear()!
+
     public boolean canRelaxTo(int newDistance) {
         return distanceFromStart == null || newDistance < distanceFromStart;
     }
@@ -31,9 +34,26 @@ public class DijPayload {
         parentVertexId = parent.getId();
     }
 
-    void clear() {
+    void clearAllExceptWeights() {
         distanceFromStart = null; // null == infinity
         relaxCount = 0;
         parentVertexId = null;
+    }
+
+    public boolean dropWeightExcludingMarked() {
+        if (weight > 0) {
+            assert weight > 1 : weight;
+            weight = 1;
+            return true; // weight dropped
+        } else {
+            weight = -weight;
+            return false; // restored heavy weight
+        }
+    }
+
+    public void markIfHeavy() {
+        if (weight > 1) {
+            weight = -weight;
+        }
     }
 }

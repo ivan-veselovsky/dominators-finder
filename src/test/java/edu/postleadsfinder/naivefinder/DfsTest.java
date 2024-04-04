@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static edu.postleadsfinder.naivefinder.PostLeadsFinder.asKeys;
+import static edu.postleadsfinder.Util.asKeys;
 import static org.assertj.core.api.BDDAssertions.then;
 
 public class DfsTest {
@@ -41,8 +41,8 @@ public class DfsTest {
         then(graph.vertex(3).getOutgoingEdges()).containsExactly(1, 4);
         then(graph.vertex(4).getOutgoingEdges()).containsExactly();
 
-        PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-        List<String> postLeadKeys = asKeys(finder.computePostLeads());
+        NaiveDfsDominatorsFinder finder = new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex);
+        List<String> postLeadKeys = asKeys(finder.computeDominators());
         then(postLeadKeys).containsExactly("5", "7");
 
         // Start/End times:

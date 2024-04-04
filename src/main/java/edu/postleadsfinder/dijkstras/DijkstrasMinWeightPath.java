@@ -8,9 +8,9 @@ import java.util.*;
 import java.util.function.ToIntBiFunction;
 
 public class DijkstrasMinWeightPath {
-    static List<Vertex<DijPayload>> dijkstrasAlgorithm(final Graph<DijPayload> graph, @NonNull Vertex<DijPayload> startVertex, @NonNull Vertex<DijPayload> targetVertex,
-                                           @NonNull ToIntBiFunction<Vertex<DijPayload>, Vertex<DijPayload>> weightFunction, final int maxEdgeWeight) {
-        graph.forAllPayloads(DijPayload::clear);
+    public static List<Vertex<DijPayload>> computeMinWeightPath(final Graph<DijPayload> graph, @NonNull Vertex<DijPayload> startVertex, @NonNull Vertex<DijPayload> targetVertex,
+                                                                @NonNull ToIntBiFunction<Vertex<DijPayload>, Vertex<DijPayload>> weightFunction, final int maxEdgeWeight_FoAssertionOnly) {
+        graph.forAllPayloads(DijPayload::clearAllExceptWeights);
 
         final Comparator<Vertex<DijPayload>> comparator = (@NonNull Vertex<DijPayload> v1, @NonNull Vertex<DijPayload> v2) -> {
             if (v1 == v2) {
@@ -46,21 +46,21 @@ public class DijkstrasMinWeightPath {
                 int newDistance = vertex.getPayload().getDistanceFromStart() + weight;
                 if (adjacentVertex.getPayload().canRelaxTo(newDistance)) {
                     boolean removed = verticesByDistance.remove(adjacentVertex);
-                    checkQueue(maxEdgeWeight, verticesByDistance);
+                    checkQueue(maxEdgeWeight_FoAssertionOnly, verticesByDistance);
 
                     adjacentVertex.getPayload().relax(vertex, newDistance);
 
                     boolean added = verticesByDistance.add(adjacentVertex); // *** forces the resorting after distance update
                     assert added : "Was not added: " + adjacentVertex + ", queue: " + verticesByDistance;
-                    checkQueue(maxEdgeWeight, verticesByDistance);
+                    checkQueue(maxEdgeWeight_FoAssertionOnly, verticesByDistance);
                 }
             }
         }
 
-        return extractParentPath(graph, targetVertex);
+        return traverseParentPath(graph, targetVertex);
     }
 
-    private static List<Vertex<DijPayload>> extractParentPath(final Graph<DijPayload> graph, Vertex<DijPayload> target) {
+    private static List<Vertex<DijPayload>> traverseParentPath(final Graph<DijPayload> graph, Vertex<DijPayload> target) {
         Vertex<DijPayload> vertex = target;
         List<Vertex<DijPayload>> list = new LinkedList<>();
         list.add(target);

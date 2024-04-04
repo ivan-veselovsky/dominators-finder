@@ -33,11 +33,11 @@ class DijkstrasMinWeightPathTest {
         final Vertex<DijPayload> startVertex = graph.vertex("A");
         final Vertex<DijPayload> exitVertex = graph.vertex("E");
 
-        List<Vertex<DijPayload>> path = DijkstrasMinWeightPath.dijkstrasAlgorithm(graph, startVertex, exitVertex, (v1, v2) -> 1, 1);
+        List<Vertex<DijPayload>> path = DijkstrasMinWeightPath.computeMinWeightPath(graph, startVertex, exitVertex, (v1, v2) -> 1, 1);
         List<String> keys = path.stream().map(Vertex::getKey).toList();
         then(keys).containsExactly("A", "B", "D", "E");
 
-        path = DijkstrasMinWeightPath.dijkstrasAlgorithm(graph, startVertex, exitVertex, (v1, v2) -> {
+        path = DijkstrasMinWeightPath.computeMinWeightPath(graph, startVertex, exitVertex, (v1, v2) -> {
             if (v1.getId() == 1 && v2.getId() == 3) {
                 return 10; // heavy edge
             }

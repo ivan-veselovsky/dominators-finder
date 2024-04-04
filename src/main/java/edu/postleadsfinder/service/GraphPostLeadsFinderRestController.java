@@ -1,10 +1,8 @@
 package edu.postleadsfinder.service;
 
-import edu.postleadsfinder.DfsPayload;
-import edu.postleadsfinder.Graph;
-import edu.postleadsfinder.GraphBuilder;
-import edu.postleadsfinder.naivefinder.PostLeadsFinder;
-import edu.postleadsfinder.Vertex;
+import edu.postleadsfinder.*;
+import edu.postleadsfinder.dijkstras.DijPayload;
+import edu.postleadsfinder.heavyverticesbypass.HeavyVerticesBypassDominatorsFinder;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -16,7 +14,7 @@ import java.io.StringWriter;
 import java.util.List;
 import java.util.StringJoiner;
 
-import static edu.postleadsfinder.naivefinder.PostLeadsFinder.asKeys;
+import static edu.postleadsfinder.Util.asKeys;
 
 @RestController
 @Log4j2
@@ -30,19 +28,20 @@ public class GraphPostLeadsFinderRestController {
 
 	@RequestMapping(path = "/server", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<String> findPostLeads(@RequestBody String inputJson) {
+	public ResponseEntity<String> findDominators(@RequestBody String inputJson) {
 		log.info(">>> Request: [{}]", inputJson);
 		try {
-			GraphBuilder<DfsPayload> graphBuilder = new GraphBuilder<>();
-			graphBuilder.withPayloadFactoryFunction(DfsPayload::new);
+			// NB: here we use "bypass heavy vertices" algo as it is correct and fast:
+			GraphBuilder<DijPayload> graphBuilder = new GraphBuilder<>();
+			graphBuilder.withPayloadFactoryFunction(DijPayload::new);
 			graphBuilder.build(inputJson);
 
-			final Graph graph = graphBuilder.getGraph();
-			final Vertex startVertex = graphBuilder.startVertex();
-			final Vertex exitVertex = graphBuilder.exitVertex();
+			final Graph<DijPayload> graph = graphBuilder.getGraph();
+			final Vertex<DijPayload> startVertex = graphBuilder.startVertex();
+			final Vertex<DijPayload> exitVertex = graphBuilder.exitVertex();
 
-			PostLeadsFinder finder = new PostLeadsFinder(graph, startVertex, exitVertex);
-			List<String> postLeadKeys = asKeys(finder.computePostLeads());
+			IDominatorsFinder<DijPayload> finder = new HeavyVerticesBypassDominatorsFinder(graph, startVertex, exitVertex);
+			List<String> postLeadKeys = asKeys(finder.computeDominators());
 			String response = formatResponseText(postLeadKeys);
 
 			log.info("<<< Response: [{}]", response);

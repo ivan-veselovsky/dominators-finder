@@ -1,29 +1,27 @@
 package edu.postleadsfinder.naivefinder;
 
 import edu.postleadsfinder.*;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
 import javax.annotation.Nullable;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
 import static com.google.common.base.Verify.verify;
 
-@RequiredArgsConstructor
 @Log4j2
-public class PostLeadsFinder implements IDominatorsFinder<DfsPayload> {
+public class NaiveDfsDominatorsFinder extends AbstractDominatorsFinder<DfsPayload> implements IDominatorsFinder<DfsPayload> {
     /** When true, implementation makes mode diagnostic checks. */
     private static final boolean DEBUG_MODE = Util.areAssertionsEnabled();
 
-    private final LinkedList<Vertex<DfsPayload>> topologicalSortList = new LinkedList<>();
-    private final Graph<DfsPayload> graph;
-    private final Vertex<DfsPayload> startVertex;
-    private final Vertex<DfsPayload> exitVertex;
+    public NaiveDfsDominatorsFinder(Graph<DfsPayload> graph, Vertex<DfsPayload> startVertex, Vertex<DfsPayload> exitVertex) {
+        super(graph, startVertex, exitVertex);
+    }
 
-    public List<Vertex<DfsPayload>> computePostLeads() {
+    private final LinkedList<Vertex<DfsPayload>> topologicalSortList = new LinkedList<>();
+
+    public List<Vertex<DfsPayload>> computeDominators() {
         graph.forAllPayloads(DfsPayload::clear);
         topologicalSortList.clear();
 
@@ -42,7 +40,7 @@ public class PostLeadsFinder implements IDominatorsFinder<DfsPayload> {
             ensureCorrectState();
         }
 
-        List<Vertex<DfsPayload>> postLeads = findPostLeads();
+        List<Vertex<DfsPayload>> postLeads = findDominators();
         filterOutStartVertex(postLeads);
         return postLeads;
     }
@@ -128,15 +126,7 @@ public class PostLeadsFinder implements IDominatorsFinder<DfsPayload> {
         }
     }
 
-    private boolean isExitVertex(Vertex vertex) {
-        return vertex == exitVertex;
-    }
-
-    private boolean isStartVertex(Vertex vertex) {
-        return vertex == startVertex;
-    }
-
-    private List<Vertex<DfsPayload>> findPostLeads() {
+    private List<Vertex<DfsPayload>> findDominators() {
         final List<Vertex<DfsPayload>> postLeadVertices = new LinkedList<>();
         int parallelEdgeCount = 0;
         for (Vertex<DfsPayload> vertex: topologicalSortList) {
@@ -158,17 +148,5 @@ public class PostLeadsFinder implements IDominatorsFinder<DfsPayload> {
                     || (!isExitVertex(vertex) && parallelEdgeCount > 0);
         }
         return postLeadVertices;
-    }
-
-    /** NB: according to task description the start vertex should *not* be present in the result,
-     so we explicitly skip it. */
-    private void filterOutStartVertex(List<Vertex<DfsPayload>> allPostLeads) {
-        assert allPostLeads.size() > 0;
-        Vertex<DfsPayload> first = allPostLeads.remove(0);
-        assert isStartVertex(first);
-    }
-
-    public static <P> List<String> asKeys(Collection<Vertex<P>> vertices) {
-        return vertices.stream().map(Vertex::getKey).toList();
     }
 }

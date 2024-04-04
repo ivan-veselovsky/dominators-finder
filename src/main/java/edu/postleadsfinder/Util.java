@@ -1,5 +1,8 @@
 package edu.postleadsfinder;
 
+import java.util.Collection;
+import java.util.List;
+
 public class Util {
 
     public static boolean areAssertionsEnabled() {
@@ -10,4 +13,9 @@ public class Util {
             return true;
         }
     }
+
+    public static <P> List<String> asKeys(Collection<Vertex<P>> vertices) {
+        return vertices.stream().map(Vertex::getKey).toList();
+    }
+
 }

@@ -1,11 +1,12 @@
 package edu.postleadsfinder;
 
-import edu.postleadsfinder.naivefinder.PostLeadsFinder;
+import edu.postleadsfinder.naivefinder.NaiveDfsDominatorsFinder;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.*;
 
-class PostLeadsFinderNegativeCasesTest {
+// TODO: refactor is a way similar to edu.postleadsfinder.AbstractDominatorsFinderTest
+class NaiveDfsDominatorsFinderNegativeCasesTest {
 
     protected GraphBuilder createGraphBuilder() {
         GraphBuilder<DfsPayload> graphBuilder = new GraphBuilder<>();
@@ -49,17 +50,17 @@ class PostLeadsFinderNegativeCasesTest {
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-            new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads()
+            new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex).computeDominators()
         ).withMessageContaining("Exit vertex [Y] appears to be unreachable from the start node [A]");
 
         final Vertex vertexQ = graph.vertex("Q");
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                new PostLeadsFinder(graph, startVertex, vertexQ).computePostLeads()
+                new NaiveDfsDominatorsFinder(graph, startVertex, vertexQ).computeDominators()
         ).withMessageContaining("Exit vertex [Q] appears to be unreachable from the start node [A]");
 
         final Vertex vertexT = graph.vertex("T");
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                new PostLeadsFinder(graph, startVertex, vertexT).computePostLeads()
+                new NaiveDfsDominatorsFinder(graph, startVertex, vertexT).computeDominators()
         ).withMessageContaining("Exit vertex [T] appears to be unreachable from the start node [A]");
     }
 
@@ -103,17 +104,17 @@ class PostLeadsFinderNegativeCasesTest {
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads()
+                new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex).computeDominators()
         ).withMessageContaining("Exit vertex [Y] appears to be unreachable from the start node [A]");
 
         final Vertex vertexQ = graph.vertex("Q");
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                new PostLeadsFinder(graph, startVertex, vertexQ).computePostLeads()
+                new NaiveDfsDominatorsFinder(graph, startVertex, vertexQ).computeDominators()
         ).withMessageContaining("Exit vertex [Q] appears to be unreachable from the start node [A]");
 
         final Vertex vertexT = graph.vertex("T");
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                new PostLeadsFinder(graph, startVertex, vertexT).computePostLeads()
+                new NaiveDfsDominatorsFinder(graph, startVertex, vertexT).computeDominators()
         ).withMessageContaining("Exit vertex [T] appears to be unreachable from the start node [A]");
     }
 
@@ -133,7 +134,7 @@ class PostLeadsFinderNegativeCasesTest {
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads())
+                new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex).computeDominators())
                 .withMessageContaining("unreachable");
     }
 
@@ -156,7 +157,7 @@ class PostLeadsFinderNegativeCasesTest {
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads())
+                new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex).computeDominators())
                 .withMessageContaining("unreachable");
     }
 
@@ -183,7 +184,7 @@ class PostLeadsFinderNegativeCasesTest {
         final Vertex exitVertex = graphBuilder.exitVertex();
 
         thenExceptionOfType(IllegalArgumentException.class).isThrownBy(() ->
-                        new PostLeadsFinder(graph, startVertex, exitVertex).computePostLeads())
+                        new NaiveDfsDominatorsFinder(graph, startVertex, exitVertex).computeDominators())
                 .withMessageContaining("unreachable");
     }
 
