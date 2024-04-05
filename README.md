@@ -45,7 +45,7 @@ to bypass it, so this "bypass" will have smaller weight than a path containing a
 at least one non-dominator vertex (if any) will disappear from `H` on each iteration. Thus, all non-dominators 
 will be removed from `H`, and in the step 4. `H` contains dominator vertices only. 
 
-Why this algorithm is fast? Because in between of any 2 dominators **two non-intersecting** paths exists (this 
+Why this algorithm is fast? Because in between of any 2 dominators **two non-intersecting** paths exist (this 
 is a particular case of Menger's theorem). Thus, it can be proven that not more than 4 iteration of step 3. will be needed
 to finish the process (see assertion in line 68 of class `edu.dominatorsfinder.heavyverticesbypass.HeavyVerticesBypassDominatorsFinder`).
 
