@@ -38,7 +38,7 @@ public class HeavyVerticesBypassDominatorsFinder extends AbstractDominatorsFinde
         assert minWeightPath.size() >= 2;
 
         final LinkedList<Vertex<DijPayload>> heavyVertices = new LinkedList<>(minWeightPath);
-        initialMarkHeavy(heavyVertices);
+        setHeavyWeight(heavyVertices);
         int heavyCount = heavyVertices.size();
         int findingMinimalPathIterationCount = 1;
 
@@ -49,7 +49,9 @@ public class HeavyVerticesBypassDominatorsFinder extends AbstractDominatorsFinde
             assert minWeightPath.size() >= 2;
             findingMinimalPathIterationCount++;
 
-            minWeightPath.forEach(v -> v.getPayload().markIfHeavy());
+            // NB: this technique is used to intersect 2 lists in (N + M) time: mark heavy vertices in the found path,
+            // then drop all not marked from 'heavyVertices' list:
+            markIfHeavy(minWeightPath);
             int droppedCount = dropUnmarkedHeavy(heavyVertices);
 
             System.out.println(findingMinimalPathIterationCount + ": Drop heavy: " + heavyCount + " - " + droppedCount + " = " + heavyVertices.size());
@@ -66,15 +68,20 @@ public class HeavyVerticesBypassDominatorsFinder extends AbstractDominatorsFinde
             }
         }
 
+        // NB: it is possible to prove that the number of this algorithm iterations never exceeds 4:
         assert findingMinimalPathIterationCount <= 4 : findingMinimalPathIterationCount;
 
         filterOutStartVertex(heavyVertices);
         return List.copyOf(heavyVertices);
     }
 
-    void initialMarkHeavy(Collection<Vertex<DijPayload>> vertices) {
+    void setHeavyWeight(Collection<Vertex<DijPayload>> vertices) {
         int heavyWeight = heavyWeight();
         vertices.forEach(v -> v.getPayload().setWeight(heavyWeight));
+    }
+
+    void markIfHeavy(Collection<Vertex<DijPayload>> path) {
+        path.forEach(v -> v.getPayload().markIfHeavy());
     }
 
     int dropUnmarkedHeavy(LinkedList<Vertex<DijPayload>> heavyVertices) {
