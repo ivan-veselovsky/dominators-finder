@@ -37,7 +37,7 @@ public class HeavyVerticesBypassDominatorsFinder extends AbstractDominatorsFinde
         }
         assert minWeightPath.size() >= 2;
 
-        LinkedList<Vertex<DijPayload>> heavyVertices = new LinkedList<>(minWeightPath);
+        final LinkedList<Vertex<DijPayload>> heavyVertices = new LinkedList<>(minWeightPath);
         initialMarkHeavy(heavyVertices);
         int heavyCount = heavyVertices.size();
         int findingMinimalPathIterationCount = 1;
