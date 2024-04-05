@@ -1,9 +1,9 @@
 package edu.dominatorsfinder.naivedfs;
 
 import edu.dominatorsfinder.AbstractFinderFactory;
-import edu.dominatorsfinder.NaiveDfsDominatorsFinderNegativeCasesTest;
+import edu.dominatorsfinder.AbstractDominatorsFinderNegativeCasesTest;
 
-public class NaiveDfsDominatorsFinderNegativeTest extends NaiveDfsDominatorsFinderNegativeCasesTest<DfsPayload> {
+public class NaiveDfsDominatorsFinderNegativeTest extends AbstractDominatorsFinderNegativeCasesTest<DfsPayload> {
 
     @Override
     protected AbstractFinderFactory<DfsPayload> getFactory() {

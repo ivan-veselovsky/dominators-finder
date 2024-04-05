@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.BDDAssertions.*;
 
-public abstract class NaiveDfsDominatorsFinderNegativeCasesTest<Payload> {
+public abstract class AbstractDominatorsFinderNegativeCasesTest<Payload> {
 
     protected abstract AbstractFinderFactory<Payload> getFactory();
 

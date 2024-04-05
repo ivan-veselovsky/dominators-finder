@@ -27,7 +27,7 @@ public class DijPayload {
 
     public void relax(Vertex<DijPayload> parent, int newDistance) {
         assert distanceFromStart == null || newDistance < distanceFromStart;
-        System.out.println("    rlx " + vertex + " " + distanceFromStart + " -> " + newDistance);
+        //System.out.println("    rlx " + vertex + " " + distanceFromStart + " -> " + newDistance);
         if (distanceFromStart != null) {
             relaxCount++;
         }

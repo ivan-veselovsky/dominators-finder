@@ -8,7 +8,7 @@ import java.util.List;
 
 import static org.assertj.core.api.BDDAssertions.thenThrownBy;
 
-public class NaiveDfsDominatorsFinderTest extends AbstractDominatorsFinderTest<DfsPayload> {
+public class NaiveDfsDominatorsFinderPositiveTest extends AbstractDominatorsFinderPositiveTest<DfsPayload> {
 
     private final AbstractFinderFactory<DfsPayload> algorithmHelper = new NaiveDfsFinderFactory();
 
@@ -20,7 +20,7 @@ public class NaiveDfsDominatorsFinderTest extends AbstractDominatorsFinderTest<D
     @Override
     @ParameterizedTest(name = "{0}, {1} -> {2}")
     @MethodSource("testCases")
-    protected void doTest(AbstractDominatorsFinderTest.TestGraph testGraph, String startVertexKey, String exitVertexKey, List<String> expectedDominators) {
+    protected void doTest(AbstractDominatorsFinderPositiveTest.TestGraph testGraph, String startVertexKey, String exitVertexKey, List<String> expectedDominators) {
         // NB: intentionally expect failure there for the naive algorithm:
         if (testGraph.name().startsWith("bug_in_naive_algorithm")) {
             thenThrownBy(() -> super.doTest(testGraph, startVertexKey, exitVertexKey, expectedDominators))

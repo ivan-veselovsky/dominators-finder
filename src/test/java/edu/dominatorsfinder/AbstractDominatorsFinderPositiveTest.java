@@ -13,7 +13,7 @@ import static edu.dominatorsfinder.Util.asKeys;
 import static org.assertj.core.api.BDDAssertions.then;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-public abstract class AbstractDominatorsFinderTest<Payload> {
+public abstract class AbstractDominatorsFinderPositiveTest<Payload> {
 
     protected abstract AbstractFinderFactory<Payload> getFactory();
 

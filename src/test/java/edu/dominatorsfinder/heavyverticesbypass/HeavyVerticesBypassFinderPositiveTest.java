@@ -3,7 +3,7 @@ package edu.dominatorsfinder.heavyverticesbypass;
 import edu.dominatorsfinder.*;
 import edu.dominatorsfinder.dijkstras.DijPayload;
 
-public class HeavyVerticesBypassFinderTest extends AbstractDominatorsFinderTest<DijPayload> {
+public class HeavyVerticesBypassFinderPositiveTest extends AbstractDominatorsFinderPositiveTest<DijPayload> {
 
     private final AbstractFinderFactory<DijPayload> algorithmHelper = new HeavyBypassFinderFactory();
 

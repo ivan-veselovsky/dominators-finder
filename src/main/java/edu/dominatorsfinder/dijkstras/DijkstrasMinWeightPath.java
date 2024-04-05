@@ -29,14 +29,14 @@ public class DijkstrasMinWeightPath {
             throw new IllegalArgumentException("Different vertices with equal ids.");
         };
 
-        // TODO: replace with Fibonacci Heap or vEB tree:
+        // TODO: replace with Fibonacci Heap or vEB tree?
         final NavigableSet<Vertex<DijPayload>> verticesByDistance = new TreeSet<>(comparator);
 
         startVertex.getPayload().setDistanceFromStart(0);
         verticesByDistance.add(startVertex);
 
         while (!verticesByDistance.isEmpty()) {
-            System.out.println("Queue: " + verticesByDistance);
+            //System.out.println("Queue: " + verticesByDistance);
             final Vertex<DijPayload> vertex = verticesByDistance.pollFirst(); // start Vertex appears first
 
             List<Integer> outgoingEdges = vertex.getOutgoingEdges();
