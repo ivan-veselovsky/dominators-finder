@@ -54,9 +54,10 @@ public class HeavyVerticesBypassDominatorsFinder extends AbstractDominatorsFinde
 
             System.out.println(findingMinimalPathIterationCount + ": Drop heavy: " + heavyCount + " - " + droppedCount + " = " + heavyVertices.size());
 
-            if (heavyVertices.size() == 1) {
-                assert isExitVertex(heavyVertices.get(0));
-                break; // There are no Dominators (list contains only last node)
+            if (heavyVertices.size() == 2) {
+                assert isStartVertex(heavyVertices.get(0));
+                assert isExitVertex(heavyVertices.get(1));
+                break; // There are no Dominators (list contains only first and last node)
             } else if (heavyVertices.size() == heavyCount) {
                 // heavy list did not change in last iteration, so it contains only Dominators:
                 break;
